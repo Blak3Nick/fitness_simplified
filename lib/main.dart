@@ -1,7 +1,21 @@
 import 'package:flutter/material.dart';
 
+import 'objectbox.dart';
+
 void main() {
-  runApp(const MyApp());
+  /// Provides access to the ObjectBox Store throughout the app.
+  late ObjectBox objectbox;
+
+  Future<void> main() async {
+    // This is required so ObjectBox can get the application directory
+    // to store the database in.
+    WidgetsFlutterBinding.ensureInitialized();
+
+    objectbox = await ObjectBox.create();
+
+    runApp(const MyApp());
+  }
+
 }
 
 class MyApp extends StatelessWidget {
@@ -49,6 +63,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+
 
   void _incrementCounter() {
     setState(() {
