@@ -1,11 +1,23 @@
+
+import 'package:intl/intl.dart';
 import 'package:objectbox/objectbox.dart';
 
+import 'objectbox.g.dart';
+
+// ignore_for_file: public_member_api_docs
+
 @Entity()
-class KettlebellExercise {
-  // Annotate with @Id() if name isn't "id" (case insensitive).
-  int id = 0;
-  String? name;
-  int reps = -1;
-  int workPeriod = 30;
-  int restPeriod = 10;
+class Note {
+  int id;
+
+  String text;
+  String? comment;
+
+  /// Note: Stored in milliseconds without time zone info.
+  DateTime date;
+
+  Note(this.text, {this.id = 0, this.comment, DateTime? date})
+      : date = date ?? DateTime.now();
+
+  String get dateFormat => DateFormat('dd.MM.yyyy hh:mm:ss').format(date);
 }
