@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:fitness_simplified/KettlebellSelector.dart';
 import 'package:flutter/material.dart';
 
 import 'models.dart';
@@ -22,11 +23,22 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
+
   @override
   Widget build(BuildContext context) => MaterialApp(
-    title: 'OB Example',
-    theme: ThemeData(primarySwatch: Colors.blue),
-    home: const MyHomePage(title: 'OB Example'),
+    title: 'Fitness Simplified',
+    theme:  ThemeData(
+        fontFamily: 'BIZ UDPMincho',
+        textTheme: Theme.of(context).textTheme.apply(
+          bodyColor: Colors.white,
+          displayColor: Colors.white
+        ),
+        primarySwatch: Colors.deepPurple,
+        secondaryHeaderColor: Colors.purpleAccent,
+        backgroundColor: const Color(0x55505050),
+        scaffoldBackgroundColor: const Color(0x55505050)
+    ),
+    home: const MyHomePage(title: 'Fitness Simplified'),
   );
 }
 
@@ -43,6 +55,12 @@ class _MyHomePageState extends State<MyHomePage> {
   final _noteInputController = TextEditingController();
   final _listController = StreamController<List<Note>>(sync: true);
   final _kettlebellListController = StreamController<List<KettlebellExercise>>(sync: true);
+
+  void _navigateToNextScreen(BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => KettlebellSelector()));
+  }
+
+
 
   void _addNote() {
     if (_noteInputController.text.isEmpty) return;
@@ -166,12 +184,16 @@ class _MyHomePageState extends State<MyHomePage> {
     // test doesn't support submitting a TextField using "enter" key.
     // See https://github.com/flutter/flutter/issues/9383
 
-
+    //
+    // floatingActionButton: FloatingActionButton(
+    //   key: const Key('submit'),
+    //   onPressed: _addNote,
+    //   child: const Icon(Icons.add),
+    // ),
     floatingActionButton: FloatingActionButton(
       key: const Key('submit'),
-      onPressed: _addNote,
+      onPressed: () {_navigateToNextScreen(context);},
       child: const Icon(Icons.add),
     ),
-
   );
 }
