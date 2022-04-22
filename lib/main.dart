@@ -1,201 +1,48 @@
-import 'dart:async';
-
-import 'package:fitness_simplified/KettlebellSelector.dart';
 import 'package:flutter/material.dart';
 
-import 'models.dart';
-import 'objectbox.dart';
+// Import the firebase_core plugin
+import 'package:firebase_core/firebase_core.dart';
 
-
-/// Provides access to the ObjectBox Store throughout the app.
-late ObjectBox objectbox;
-
-Future<void> main() async {
-  // This is required so ObjectBox can get the application directory
-  // to store the database in.
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
-
-  objectbox = await ObjectBox.create();
-
-  runApp(const MyApp());
+  runApp(App());
 }
 
-
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-
+/// We are using a StatefulWidget such that we only create the [Future] once,
+/// no matter how many times our widget rebuild.
+/// If we used a [StatelessWidget], in the event where [App] is rebuilt, that
+/// would re-initialize FlutterFire and make our application re-enter loading state,
+/// which is undesired.
+class App extends StatefulWidget {
+  // Create the initialization Future outside of `build`:
   @override
-  Widget build(BuildContext context) => MaterialApp(
-    title: 'Fitness Simplified',
-    theme:  ThemeData(
-        fontFamily: 'BIZ UDPMincho',
-        textTheme: Theme.of(context).textTheme.apply(
-          bodyColor: Colors.white,
-          displayColor: Colors.white
-        ),
-        primarySwatch: Colors.deepPurple,
-        secondaryHeaderColor: Colors.purpleAccent,
-        backgroundColor: const Color(0x55505050),
-        scaffoldBackgroundColor: const Color(0x55505050)
-    ),
-    home: const MyHomePage(title: 'Fitness Simplified'),
-  );
+  _AppState createState() => _AppState();
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  final _noteInputController = TextEditingController();
-  final _listController = StreamController<List<Note>>(sync: true);
-  final _kettlebellListController = StreamController<List<KettlebellExercise>>(sync: true);
-
-  void _navigateToNextScreen(BuildContext context) {
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => KettlebellSelector()));
-  }
-
-
-
-  void _addNote() {
-    if (_noteInputController.text.isEmpty) return;
-    objectbox.noteBox.put(Note(_noteInputController.text));
-    _noteInputController.text = '';
-  }
+class _AppState extends State<App> {
+  /// The future is part of the state of our widget. We should not call `initializeApp`
+  /// directly inside [build].
+  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
 
   @override
-  void initState() {
-    super.initState();
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      // Initialize FlutterFire:
+      future: _initialization,
+      builder: (context, snapshot) {
+        // Check for errors
+        if (snapshot.hasError) {
+          return Text('error');
+        }
 
-    setState(() {});
+        // Once complete, show your application
+        if (snapshot.connectionState == ConnectionState.done) {
+          return MaterialApp();
+        }
 
-    _listController.addStream(objectbox.queryStream.map((q) => q.find()));
-    _kettlebellListController.addStream(objectbox.kettlebellQueryStream.map((event) => event.find()));
+        // Otherwise, show something whilst waiting for initialization to complete
+        return Text('loading');
+      },
+    );
   }
-
-  @override
-  void dispose() {
-    _noteInputController.dispose();
-    _listController.close();
-    _kettlebellListController.close();
-    super.dispose();
-  }
-
-  GestureDetector Function(BuildContext, int) _itemBuilder(List<Note> notes) =>
-          (BuildContext context, int index) => GestureDetector(
-        onTap: () => objectbox.noteBox.remove(notes[index].id),
-        child: Row(
-          children: <Widget>[
-            Expanded(
-              child: Container(
-                decoration: const BoxDecoration(
-                    border:
-                    Border(bottom: BorderSide(color: Colors.black12))),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 18.0, horizontal: 10.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        notes[index].text,
-                        style: const TextStyle(
-                          fontSize: 15.0,
-                        ),
-                        // Provide a Key for the integration test
-                        key: Key('list_item_$index'),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 5.0),
-                        child: Text(
-                          'Added on ${notes[index].dateFormat}',
-                          style: const TextStyle(
-                            fontSize: 12.0,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
-
-  @override
-  Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(
-      title: Text(widget.title),
-    ),
-    body: Column(children: <Widget>[
-      Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Row(
-          children: <Widget>[
-            Expanded(
-              child: Column(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                    child: TextField(
-                      decoration: const InputDecoration(
-                          hintText: 'Enter a new note'),
-                      controller: _noteInputController,
-                      onSubmitted: (value) => _addNote(),
-                      // Provide a Key for the integration test
-                      key: const Key('input'),
-                    ),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(top: 10.0, right: 10.0),
-                    child: Align(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        'Tap a note to remove it',
-                        style: TextStyle(
-                          fontSize: 11.0,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            )
-          ],
-        ),
-      ),
-      Expanded(
-          child: StreamBuilder<List<Note>>(
-              stream: _listController.stream,
-              builder: (context, snapshot) => ListView.builder(
-                  shrinkWrap: true,
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  itemCount: snapshot.hasData ? snapshot.data!.length : 0,
-                  itemBuilder: _itemBuilder(snapshot.data ?? []))))
-    ]),
-    // We need a separate submit button because flutter_driver integration
-    // test doesn't support submitting a TextField using "enter" key.
-    // See https://github.com/flutter/flutter/issues/9383
-
-    //
-    // floatingActionButton: FloatingActionButton(
-    //   key: const Key('submit'),
-    //   onPressed: _addNote,
-    //   child: const Icon(Icons.add),
-    // ),
-    floatingActionButton: FloatingActionButton(
-      key: const Key('submit'),
-      onPressed: () {_navigateToNextScreen(context);},
-      child: const Icon(Icons.add),
-    ),
-  );
 }
