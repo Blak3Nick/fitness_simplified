@@ -1,7 +1,10 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 
 // Import the firebase_core plugin
 import 'package:firebase_core/firebase_core.dart';
+
+FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,6 +26,10 @@ class _AppState extends State<App> {
   /// The future is part of the state of our widget. We should not call `initializeApp`
   /// directly inside [build].
   final Future<FirebaseApp> _initialization = Firebase.initializeApp();
+
+  analyticsEvent() {
+    //analytics.logEvent(name: name)
+  }
 
   @override
   Widget build(BuildContext context) {
