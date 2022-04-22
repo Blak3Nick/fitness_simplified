@@ -31,9 +31,38 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "4:2113793114711219334",
+      "lastPropertyId": "4:7652195140242900704",
+      "name": "KettlebellExercise",
+      "properties": [
+        {
+          "id": "1:5871606719488447061",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:6811403661745540980",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "3:923680119084163148",
+          "name": "workPeriod",
+          "type": 6
+        },
+        {
+          "id": "4:7652195140242900704",
+          "name": "restPeriod",
+          "type": 6
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "3:623997296480199138",
+  "lastEntityId": "4:2113793114711219334",
   "lastIndexId": "0:0",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",

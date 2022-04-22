@@ -21,3 +21,15 @@ class Note {
 
   String get dateFormat => DateFormat('dd.MM.yyyy hh:mm:ss').format(date);
 }
+
+@Entity()
+class KettlebellExercise {
+  int id;
+  String name;
+  int workPeriod;
+  int restPeriod;
+
+  KettlebellExercise({this.id = 0, required this.name, this.restPeriod = 30, this.workPeriod = 30});
+
+
+}

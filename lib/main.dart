@@ -42,6 +42,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final _noteInputController = TextEditingController();
   final _listController = StreamController<List<Note>>(sync: true);
+  final _kettlebellListController = StreamController<List<KettlebellExercise>>(sync: true);
 
   void _addNote() {
     if (_noteInputController.text.isEmpty) return;
@@ -56,12 +57,14 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {});
 
     _listController.addStream(objectbox.queryStream.map((q) => q.find()));
+    _kettlebellListController.addStream(objectbox.kettlebellQueryStream.map((event) => event.find()));
   }
 
   @override
   void dispose() {
     _noteInputController.dispose();
     _listController.close();
+    _kettlebellListController.close();
     super.dispose();
   }
 
@@ -162,10 +165,13 @@ class _MyHomePageState extends State<MyHomePage> {
     // We need a separate submit button because flutter_driver integration
     // test doesn't support submitting a TextField using "enter" key.
     // See https://github.com/flutter/flutter/issues/9383
+
+
     floatingActionButton: FloatingActionButton(
       key: const Key('submit'),
       onPressed: _addNote,
       child: const Icon(Icons.add),
     ),
+
   );
 }
