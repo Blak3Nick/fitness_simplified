@@ -1,35 +1,28 @@
-import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:fitness_simplified/routes.dart';
+import 'package:fitness_simplified/services/firestore.dart';
+import 'package:fitness_simplified/shared/loading.dart';
+import 'package:fitness_simplified/theme.dart';
 import 'package:flutter/material.dart';
-
-// Import the firebase_core plugin
 import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
 
-FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+import 'models.dart';
+
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(App());
+  runApp(const App());
 }
 
-/// We are using a StatefulWidget such that we only create the [Future] once,
-/// no matter how many times our widget rebuild.
-/// If we used a [StatelessWidget], in the event where [App] is rebuilt, that
-/// would re-initialize FlutterFire and make our application re-enter loading state,
-/// which is undesired.
 class App extends StatefulWidget {
-  // Create the initialization Future outside of `build`:
+  const App({Key? key}) : super(key: key);
+
   @override
   _AppState createState() => _AppState();
 }
 
 class _AppState extends State<App> {
-  /// The future is part of the state of our widget. We should not call `initializeApp`
-  /// directly inside [build].
   final Future<FirebaseApp> _initialization = Firebase.initializeApp();
-
-  analyticsEvent() {
-    //analytics.logEvent(name: name)
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,16 +32,25 @@ class _AppState extends State<App> {
       builder: (context, snapshot) {
         // Check for errors
         if (snapshot.hasError) {
-          return Text('error');
+          // Error screen
         }
 
         // Once complete, show your application
         if (snapshot.connectionState == ConnectionState.done) {
-          return MaterialApp();
+          return StreamProvider(
+            create: (_) => FirestoreService().streamReport(),
+            catchError: (_, err) => Report(),
+            initialData: Report(),
+            child: MaterialApp(
+                debugShowCheckedModeBanner: true,
+                routes: appRoutes,
+                theme: appTheme
+            ),
+          );
         }
 
         // Otherwise, show something whilst waiting for initialization to complete
-        return Text('loading');
+        return const MaterialApp(home: LoadingScreen());
       },
     );
   }

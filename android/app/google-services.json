@@ -1,0 +1,127 @@
+{
+  "project_info": {
+    "project_number": "749798274410",
+    "firebase_url": "https://workout-builder-3207b.firebaseio.com",
+    "project_id": "workout-builder-3207b",
+    "storage_bucket": "workout-builder-3207b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:749798274410:android:5a3a6c5bf962e37e7da113",
+        "android_client_info": {
+          "package_name": "com.example.umgcteam3"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "749798274410-kggkht155v41m6esfoebkckvqrovca5u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD2pnN-GTLvRQExh0sg2dMj7Qkphh8lKGk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "749798274410-kggkht155v41m6esfoebkckvqrovca5u.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "749798274410-13qe8vq94l3ijuk3q5av7vslhnu41qmf.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.ftness.fitnessSimplified"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:749798274410:android:a08f294213af92767da113",
+        "android_client_info": {
+          "package_name": "com.example.workout_volt_emulator"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "749798274410-kggkht155v41m6esfoebkckvqrovca5u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD2pnN-GTLvRQExh0sg2dMj7Qkphh8lKGk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "749798274410-kggkht155v41m6esfoebkckvqrovca5u.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "749798274410-13qe8vq94l3ijuk3q5av7vslhnu41qmf.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.ftness.fitnessSimplified"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:749798274410:android:b2916a45cdb0efb27da113",
+        "android_client_info": {
+          "package_name": "com.ftness.fitness_simplified"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "749798274410-rcsds5k3gspedhji603qmr74ijrvep3l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ftness.fitness_simplified",
+            "certificate_hash": "01a5821ccf539dce6bf790db31b75bab12dc929f"
+          }
+        },
+        {
+          "client_id": "749798274410-kggkht155v41m6esfoebkckvqrovca5u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD2pnN-GTLvRQExh0sg2dMj7Qkphh8lKGk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "749798274410-kggkht155v41m6esfoebkckvqrovca5u.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "749798274410-13qe8vq94l3ijuk3q5av7vslhnu41qmf.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.ftness.fitnessSimplified"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
