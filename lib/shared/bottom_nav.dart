@@ -20,7 +20,7 @@ class BottomNavBar extends StatelessWidget {
             FontAwesomeIcons.bolt,
             size: 20,
           ),
-          label: 'About',
+          label: 'Kettlebell Workouts',
         ),
         BottomNavigationBarItem(
           icon: Icon(
@@ -37,7 +37,7 @@ class BottomNavBar extends StatelessWidget {
           // do nothing
             break;
           case 1:
-            Navigator.pushNamed(context, '/about');
+            Navigator.pushNamed(context, '/kettlebellworkouts');
             break;
           case 2:
             Navigator.pushNamed(context, '/profile');
