@@ -6,6 +6,40 @@ part of 'models.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+Group _$GroupFromJson(Map<String, dynamic> json) => Group(
+      repeat: json['repeat'] as int? ?? 1,
+      title: json['title'] as String? ?? '',
+      work_duration: json['work_duration'] as int? ?? 1,
+      rest_duration: json['rest_duration'] as int? ?? 1,
+      work_rest: (json['work_rest'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
+    );
+
+Map<String, dynamic> _$GroupToJson(Group instance) => <String, dynamic>{
+      'repeat': instance.repeat,
+      'title': instance.title,
+      'work_duration': instance.work_duration,
+      'rest_duration': instance.rest_duration,
+      'work_rest': instance.work_rest,
+    };
+
+KettleBellWorkout _$KettleBellWorkoutFromJson(Map<String, dynamic> json) =>
+    KettleBellWorkout(
+      groups: (json['groups'] as List<dynamic>?)
+              ?.map((e) => Group.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+      id: json['id'] as String? ?? '',
+    );
+
+Map<String, dynamic> _$KettleBellWorkoutToJson(KettleBellWorkout instance) =>
+    <String, dynamic>{
+      'groups': instance.groups,
+      'id': instance.id,
+    };
+
 Option _$OptionFromJson(Map<String, dynamic> json) => Option(
       value: json['value'] as String? ?? '',
       detail: json['detail'] as String? ?? '',

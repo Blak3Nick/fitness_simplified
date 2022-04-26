@@ -1,4 +1,4 @@
-import 'package:fitness_simplified/Kettlebells/kettlebell_selector.dart';
+
 import 'package:fitness_simplified/home/home.dart';
 import 'package:fitness_simplified/profile/profile.dart';
 import 'package:fitness_simplified/topics/topics.dart';

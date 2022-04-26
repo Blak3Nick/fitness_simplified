@@ -12,12 +12,21 @@ class FirestoreService {
 
   /// Reads all documments from the topics collection
   Future<List<Topic>> getTopics() async {
-    developer.log("getting topics");
     var ref = _db.collection('topics');
     var snapshot = await ref.get();
     var data = snapshot.docs.map((s) => s.data());
     var topics = data.map((d) => Topic.fromJson(d));
     return topics.toList();
+  }
+
+  ///Reads all Kettlebell Workouts from the collection
+  Future<List<KettleBellWorkout>> getKettlebellWorkouts() async {
+    var ref = _db.collection('KettleBellWorkouts');
+    var snapshot = await ref.get();
+    var data = snapshot.docs.map((s) => s.data());
+    var kbell_workouts = data.map((d) => KettleBellWorkout.fromJson(d));
+    developer.log(data.toString());
+    return kbell_workouts.toList();
   }
 
   /// Retrieves a single quiz document

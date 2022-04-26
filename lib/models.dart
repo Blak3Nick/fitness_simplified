@@ -33,16 +33,30 @@ class KettlebellExercise {
 
 
 }
+
+
 @JsonSerializable()
 class Group {
+  int repeat;
+  String title;
+  int work_duration;
+  int rest_duration;
+  List<String> work_rest;
 
+  Group({this.repeat=1, this.title = '', this.work_duration = 1, this.rest_duration = 1, this.work_rest = const []});
+  factory Group.fromJson(Map<String, dynamic> json) => _$GroupFromJson(json);
+  Map<String, dynamic> toJson() => _$GroupToJson(this);
 }
 
 @JsonSerializable()
 class KettleBellWorkout {
-  List groups;
+  List<Group> groups;
   String id;
-  KettleBellWorkout({this.groups = const [], this.id = ''});
+  KettleBellWorkout({
+    this.groups = const [],
+    this.id = ''});
+  factory KettleBellWorkout.fromJson(Map<String, dynamic> json) => _$KettleBellWorkoutFromJson(json);
+  Map<String, dynamic> toJson() => _$KettleBellWorkoutToJson(this);
 }
 
 
@@ -61,7 +75,9 @@ class Option {
 class Question {
   String text;
   List<Option> options;
-  Question({this.options = const [], this.text = ''});
+  Question({
+    this.options = const [],
+    this.text = ''});
   factory Question.fromJson(Map<String, dynamic> json) =>
       _$QuestionFromJson(json);
   Map<String, dynamic> toJson() => _$QuestionToJson(this);
