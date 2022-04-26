@@ -33,6 +33,18 @@ class KettlebellExercise {
 
 
 }
+@JsonSerializable()
+class Group {
+
+}
+
+@JsonSerializable()
+class KettleBellWorkout {
+  List groups;
+  String id;
+  KettleBellWorkout({this.groups = const [], this.id = ''});
+}
+
 
 //quiz
 @JsonSerializable()
