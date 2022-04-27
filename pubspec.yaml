@@ -32,7 +32,7 @@ dependencies:
   objectbox_flutter_libs: any
   flutter:
     sdk: flutter
-
+  scrollable_list_tabview: 0.2.0-nullsafety
 
 
   # The following adds the Cupertino Icons font to your application.

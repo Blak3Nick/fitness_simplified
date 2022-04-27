@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../models.dart';
 import '../shared/progress_bar.dart';
+import 'kbell_workout_overview_widget.dart';
 import 'kettlebell_drawer.dart';
 
 class KbellGroup extends StatelessWidget {
@@ -72,11 +73,7 @@ class KettleBellWorkoutScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
       ),
       body: ListView(children: [
-        Hero(
-          tag: 'assets/kbell.png',
-          child: Image.asset('assets/kbell.png',
-              width: MediaQuery.of(context).size.width),
-        ),
+        ScrollableKettlebellWidget(kettleBellWorkout: kettleBellWorkout,),
         Text(
           kettleBellWorkout.id,
           style:
