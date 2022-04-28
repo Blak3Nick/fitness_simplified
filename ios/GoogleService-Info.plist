@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>749798274410-13qe8vq94l3ijuk3q5av7vslhnu41qmf.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.749798274410-13qe8vq94l3ijuk3q5av7vslhnu41qmf</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>749798274410-rcsds5k3gspedhji603qmr74ijrvep3l.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDzp_kUgAfkZnPvlQucygUezC37vqHaTa8</string>
+	<key>GCM_SENDER_ID</key>
+	<string>749798274410</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.ftness.fitnessSimplified</string>
+	<key>PROJECT_ID</key>
+	<string>workout-builder-3207b</string>
+	<key>STORAGE_BUCKET</key>
+	<string>workout-builder-3207b.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:749798274410:ios:f65a4999f50a85ef7da113</string>
+	<key>DATABASE_URL</key>
+	<string>https://workout-builder-3207b.firebaseio.com</string>
+</dict>
+</plist>
