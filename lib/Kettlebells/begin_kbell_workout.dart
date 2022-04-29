@@ -70,7 +70,7 @@ class _BeginKettlebellWorkoutState extends State<BeginKettlebellWorkout> {
         stopTimer(reset: false);
     }, icon: isRunning ? const Icon(Icons.pause_circle_filled, color: Colors.deepPurple,)
         :const Icon(Icons.play_circle, color: Colors.deepPurple,),
-      iconSize: 58.0,
+      iconSize: 78.0,
     )
       : Column(
       children:
@@ -79,7 +79,7 @@ class _BeginKettlebellWorkoutState extends State<BeginKettlebellWorkout> {
             startTimer();
           }, icon: const Icon(Icons.play_circle, color: Colors.deepPurple,),
             tooltip: 'Start Workout',
-            iconSize: 58.0,
+            iconSize: 78.0,
           ),
           const Text('Start Workout')
         ],
@@ -87,27 +87,31 @@ class _BeginKettlebellWorkoutState extends State<BeginKettlebellWorkout> {
   }
 
    Widget buildTime(){
-     return SizedBox(
-       width: 200,
-       height: 200,
-       child: Stack(
-         fit: StackFit.expand,
-         children: [
-           CircularProgressIndicator(
-             value: seconds / maxSeconds,
-             strokeWidth: 18,
-             color: Colors.pinkAccent,
-           ),
-           Center(
-             child: Text('$seconds',
-               style: const TextStyle(
-                 fontWeight: FontWeight.bold,
-                 color: Colors.white,
-                 fontSize: 80,
+     return SafeArea(
+        minimum: const EdgeInsets.only(top: 15, bottom: 15),
+       child: SizedBox(
+         width: 150,
+         height: 150,
+         child: Stack(
+           fit: StackFit.expand,
+           children: [
+             CircularProgressIndicator(
+               value: seconds / maxSeconds,
+               strokeWidth: 18,
+               color: Colors.pinkAccent,
+
+             ),
+             Center(
+               child: Text('$seconds',
+                 style: const TextStyle(
+                   fontWeight: FontWeight.bold,
+                   color: Colors.white,
+                   fontSize: 80,
+                 ),
                ),
              ),
-           ),
-         ],
+           ],
+         ),
        ),
      );
    }
@@ -138,17 +142,28 @@ class _BeginKettlebellWorkoutState extends State<BeginKettlebellWorkout> {
             appBar: AppBar(
               title: const Text('Workout'),
               backgroundColor: Colors.deepPurple,
+
             ),
               body: Center(
                 child: Column (
                       children: [
-                        buildTime(),
-                        startButton(kettleBellWorkout!),
                         Text(currentExerciseName,
                         style: const TextStyle(fontWeight: FontWeight.bold,
                           color: Colors.white,
                           fontSize: 80),
-                        )
+                        ),
+                        buildTime(),
+                        startButton(kettleBellWorkout!),
+                        const Text('Next Exercise',
+                          style: TextStyle(fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              fontSize: 40),
+                        ),
+                        Text(nextExerciseName,
+                            style: const TextStyle(fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontSize: 40),
+                        ),
                       ],
                 ),
               )
@@ -164,6 +179,10 @@ class _BeginKettlebellWorkoutState extends State<BeginKettlebellWorkout> {
   }
 void assignExName(){
      currentExerciseName = kettleBellWorkout?.groups[currentGroupNum].work_rest[currentWorkRestNum] as String;
+     if (currentWorkRestNum < workRestMax){
+       nextExerciseName = kettleBellWorkout?.groups[currentGroupNum].work_rest[currentWorkRestNum+1] as String;
+     }
+
 }
 
   void stopTimer({bool reset = true}) {
