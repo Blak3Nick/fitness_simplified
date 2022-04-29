@@ -28,11 +28,23 @@ class FirestoreService {
     developer.log(data.toString());
     return kbell_workouts.toList();
   }
+  Future<KettleBellWorkout> getKWorkout(String kId) async {
+    developer.log(kId);
+    var ref = _db.collection('KettleBellWorkouts').doc(kId);
+    var snapshot = await ref.get();
+    //var data = snapshot.data()
+    developer.log('printing kettlebell workout');
+    developer.log(snapshot.data().toString());
+    return KettleBellWorkout.fromJson(snapshot.data() ?? {});
+  }
+
 
   /// Retrieves a single quiz document
   Future<Quiz> getQuiz(String quizId) async {
     var ref = _db.collection('quizzes').doc(quizId);
     var snapshot = await ref.get();
+    developer.log('printing quiz');
+    developer.log(snapshot.data().toString());
     return Quiz.fromJson(snapshot.data() ?? {});
   }
 

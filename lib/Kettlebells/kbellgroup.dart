@@ -1,3 +1,4 @@
+import 'package:fitness_simplified/Kettlebells/begin_kbell_workout.dart';
 import 'package:fitness_simplified/Kettlebells/kettlebell_workouts.dart';
 import 'package:flutter/material.dart';
 
@@ -70,7 +71,8 @@ class KettleBellWorkoutScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        title: const Text('Overview'),
+        backgroundColor: Colors.deepPurple,
       ),
       body: ListView(children: [
         ScrollableKettlebellWidget(kettleBellWorkout: kettleBellWorkout,),
@@ -81,6 +83,16 @@ class KettleBellWorkoutScreen extends StatelessWidget {
         ),
         //QuizList(topic: topic)
       ]),
+    floatingActionButton: FloatingActionButton.extended(
+      backgroundColor: Colors.deepPurple,
+      onPressed: () {
+      Navigator.pushNamed(context, 'beginKworkout', arguments: {'id': kettleBellWorkout.id });
+    },
+      icon: const Icon(Icons.fitness_center),
+      label: const Text('Begin Workout'),
+
+    ),
+
     );
   }
 }
