@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:fitness_simplified/services/firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../services/firestore.dart';
 import '../models.dart';
@@ -21,45 +22,100 @@ class _BeginKettlebellWorkoutState extends State<BeginKettlebellWorkout> {
    int mainIndex = 0;
   _BeginKettlebellWorkoutState();
   Timer? timer;
+   int seconds = 10;
+   int maxSeconds = 60;
+   int maxGroups = 0;
+   int workRestMax = 1;
+   int currentWorkRestNum = 0;
+   int currentGroupNum = 0;
+   Future<KettleBellWorkout>? databaseFuture;
+   KettleBellWorkout? kettleBellWorkout;
+   bool firstPass = true;
+   String currentExerciseName = '';
+   String nextExerciseName = '';
+   @override
+   void didChangeDependencies() {
+     super.didChangeDependencies();
+     var arg = ModalRoute.of(context)?.settings.arguments as Map;
+     String id = arg['id'];
+     databaseFuture = FirestoreService().getKWorkout(id);
+   }
 
-  Widget startButton(KettleBellWorkout kettleBellWorkout, int index) {
-      void initializeTimer(int index){
-        if(index %2 == 0){
+   void startTimer() {
+     const oneSec = Duration(seconds: 1);
+     timer = Timer.periodic(
+       oneSec, (Timer timer) {
+         if (seconds == 0) {
+           setState(() {
+             assignSeconds();
+             assignExName();
+           });
+         } else {
+           setState(() {
+             seconds--; });
+         }
+       },
+     );
+   }
 
-        }
-        developer.log(kettleBellWorkout.groups.toString());
-        int timerMax = kettleBellWorkout.groups[index].work_duration;
-        int seconds = timerMax;
-        timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-          setState(() => seconds--);
-        });
-      }
-    return Column(
+   @override
+   void dispose() {
+     timer?.cancel();
+     super.dispose();
+   }
+   Widget startButton(KettleBellWorkout kettleBellWorkout ) {
+     final isRunning = timer == null ? false : timer!.isActive;
+     return isRunning
+      ? IconButton(onPressed: () {
+        stopTimer(reset: false);
+    }, icon: isRunning ? const Icon(Icons.pause_circle_filled, color: Colors.deepPurple,)
+        :const Icon(Icons.play_circle, color: Colors.deepPurple,),
+      iconSize: 58.0,
+    )
+      : Column(
       children:
-        <Widget>[
+      <Widget>[
           IconButton(onPressed: () {
-            initializeTimer(index);
+            startTimer();
           }, icon: const Icon(Icons.play_circle, color: Colors.deepPurple,),
             tooltip: 'Start Workout',
             iconSize: 58.0,
-
           ),
           const Text('Start Workout')
         ],
-
-
     );
   }
-  
+
+   Widget buildTime(){
+     return SizedBox(
+       width: 200,
+       height: 200,
+       child: Stack(
+         fit: StackFit.expand,
+         children: [
+           CircularProgressIndicator(
+             value: seconds / maxSeconds,
+             strokeWidth: 18,
+             color: Colors.pinkAccent,
+           ),
+           Center(
+             child: Text('$seconds',
+               style: const TextStyle(
+                 fontWeight: FontWeight.bold,
+                 color: Colors.white,
+                 fontSize: 80,
+               ),
+             ),
+           ),
+         ],
+       ),
+     );
+   }
 
   @override
   Widget build(BuildContext context) {
-
-    var arg = ModalRoute.of(context)?.settings.arguments as Map;
-    String id = arg['id'];
-    developer.log('Debugging.....');
     return FutureBuilder<KettleBellWorkout>(
-      future: FirestoreService().getKWorkout(id),
+      future: databaseFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const LoadingScreen();
@@ -68,19 +124,36 @@ class _BeginKettlebellWorkoutState extends State<BeginKettlebellWorkout> {
             child: ErrorMessage(message: snapshot.error.toString()),
           );
         } else if (snapshot.hasData) {
-          var kettlebellworkout = snapshot.data!;
-          developer.log(mainIndex.toString());
-          developer.log('This is a debugging line...............');
-          developer.log(kettlebellworkout.groups.length.toString());
+          kettleBellWorkout ??= snapshot.data!;
+          //int startingMax = kettlebellworkout.groups[0].work_duration;
+          if(kettleBellWorkout != null && firstPass == true){
+            maxGroups =  kettleBellWorkout?.groups.length! as int;
+            seconds = kettleBellWorkout?.groups[0].work_duration as int;
+            workRestMax = kettleBellWorkout?.groups[0].work_rest.length as int;
+            assignExName();
+            firstPass = false;
+          }
+          return SafeArea(
+            child: Scaffold(
+            appBar: AppBar(
+              title: const Text('Workout'),
+              backgroundColor: Colors.deepPurple,
+            ),
+              body: Center(
+                child: Column (
+                      children: [
+                        buildTime(),
+                        startButton(kettleBellWorkout!),
+                        Text(currentExerciseName,
+                        style: const TextStyle(fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontSize: 80),
+                        )
+                      ],
+                ),
+              )
 
-          return Scaffold(
-          appBar: AppBar(
-            title: const Text('Workout'),
-            backgroundColor: Colors.deepPurple,
-          ),
-            body: Center(
 
-              child: startButton(kettlebellworkout, mainIndex++),
             ),
           );
         } else {
@@ -89,6 +162,36 @@ class _BeginKettlebellWorkoutState extends State<BeginKettlebellWorkout> {
       },
     );
   }
+void assignExName(){
+     currentExerciseName = kettleBellWorkout?.groups[currentGroupNum].work_rest[currentWorkRestNum] as String;
+}
+
+  void stopTimer({bool reset = true}) {
+     if (reset) {
+
+     }
+      setState(() => timer?.cancel());
+  }
+
+  void assignSeconds() {
+     if(currentWorkRestNum % 2 == 0 ) {
+       seconds = kettleBellWorkout?.groups[currentGroupNum].work_duration as int;
+     }
+     else {
+       seconds = kettleBellWorkout?.groups[currentGroupNum].rest_duration as int;
+     }
+     currentWorkRestNum++;
+     maxSeconds = seconds;
+     if (kettleBellWorkout?.groups[currentGroupNum].work_rest.length as int < currentWorkRestNum) {
+       currentWorkRestNum = 0;
+       currentGroupNum++;
+       if (currentGroupNum > maxGroups){
+         ///TO DO end workout
+         developer.log('ended workout');
+       }
+     }
+  }
+
 }
 
 
