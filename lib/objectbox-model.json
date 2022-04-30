@@ -4,35 +4,6 @@
   "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
   "entities": [
     {
-      "id": "3:623997296480199138",
-      "lastPropertyId": "4:8472552988674479534",
-      "name": "Note",
-      "properties": [
-        {
-          "id": "1:6196555718715360855",
-          "name": "id",
-          "type": 6,
-          "flags": 1
-        },
-        {
-          "id": "2:1994731797183110299",
-          "name": "text",
-          "type": 9
-        },
-        {
-          "id": "3:7241433361581955613",
-          "name": "comment",
-          "type": 9
-        },
-        {
-          "id": "4:8472552988674479534",
-          "name": "date",
-          "type": 10
-        }
-      ],
-      "relations": []
-    },
-    {
       "id": "4:2113793114711219334",
       "lastPropertyId": "4:7652195140242900704",
       "name": "KettlebellExercise",
@@ -70,7 +41,8 @@
   "modelVersionParserMinimum": 5,
   "retiredEntityUids": [
     8682034558630235119,
-    5756834388792090515
+    5756834388792090515,
+    623997296480199138
   ],
   "retiredIndexUids": [],
   "retiredPropertyUids": [
@@ -80,7 +52,11 @@
     4730398941311730248,
     8193917617895721269,
     296886945254056954,
-    7902826360191151333
+    7902826360191151333,
+    6196555718715360855,
+    1994731797183110299,
+    7241433361581955613,
+    8472552988674479534
   ],
   "retiredRelationUids": [],
   "version": 1

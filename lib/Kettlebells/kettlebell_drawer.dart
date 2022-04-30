@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import '../models.dart';
-import '../quiz/quiz.dart';
+import 'kbell_workout_overview_widget.dart';
 
 
 class KettleBellWorkoutDrawer extends StatelessWidget {
@@ -60,7 +60,7 @@ class KWorkoutList extends StatelessWidget {
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (BuildContext context) =>
-                        QuizScreen(quizId: group.title),
+                        ScrollableKettlebellWidget(kettleBellWorkout: kettlebellworkout),
                   ),
                 );
               },

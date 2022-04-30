@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
 
+import '../Kettlebells/kettlebell_workouts.dart';
 import '../login/login.dart';
 import '../services/auth.dart';
 import '../shared/error.dart';
 import '../shared/loading.dart';
-import '../topics/topics.dart';
 
 
 class HomeScreen extends StatelessWidget {
@@ -27,7 +27,7 @@ class HomeScreen extends StatelessWidget {
             child: ErrorMessage(),
           );
         } else if (snapshot.hasData) {
-          return const TopicsScreen();
+          return const KettleBellWorkoutsScreen();
         } else {
           return const LoginScreen();
         }
