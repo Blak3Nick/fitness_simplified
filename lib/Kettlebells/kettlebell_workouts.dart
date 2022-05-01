@@ -48,7 +48,9 @@ class KettleBellWorkoutsScreen extends StatelessWidget {
               crossAxisSpacing: 10.0,
               crossAxisCount: 2,
               children: kettlebellworkouts.map<Widget>((kettlebellworkout) => KbellGroup(kettleBellWorkout: kettlebellworkout)).toList(),
+
             ),
+
             bottomNavigationBar: const BottomNavBar(),
           );
         } else {

@@ -1,3 +1,4 @@
+import 'package:fitness_simplified/services/firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -32,7 +33,15 @@ class KettleBellWorkoutDrawer extends StatelessWidget {
                     ),
                   ),
                 ),
-                KWorkoutList(kettlebellworkout: kbellworkout)
+                KWorkoutList(kettlebellworkout: kbellworkout),
+                FloatingActionButton.extended(
+                  onPressed: () {
+                    addKWorkout();
+                  },
+                  label: const Text('Add New Workout'),
+                  icon: const Icon(Icons.thumb_up),
+                  backgroundColor: Colors.pink,
+                ),
               ],
             );
           },
@@ -104,4 +113,17 @@ class QuizBadge extends StatelessWidget {
       return const Icon(FontAwesomeIcons.solidCircle, color: Colors.grey);
     }
   }
+}
+  void addKWorkout() {
+  List<String> strings = ['Swing', 'Rest'];
+  Group group = Group(repeat: 1, title: 'Set 1', work_duration: 10, rest_duration: 10, work_rest: strings );
+  List<Group> groups = [];
+  groups.add(group);
+  Group group1 = Group(repeat: 1, title: 'Set 2', work_duration: 10, rest_duration: 10, work_rest: strings );
+  groups.add(group1);
+  FirestoreService firestoreService = FirestoreService();
+  Future upload() async {
+    firestoreService.addNewKettlebellWorkout(groups, 'test');
+  }
+  upload();
 }
