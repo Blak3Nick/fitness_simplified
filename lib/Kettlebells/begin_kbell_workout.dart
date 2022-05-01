@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:fitness_simplified/services/firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../services/firestore.dart';
 import '../models.dart';
@@ -28,11 +27,17 @@ class _BeginKettlebellWorkoutState extends State<BeginKettlebellWorkout> {
    int workRestMax = 1;
    int currentWorkRestNum = 0;
    int currentGroupNum = 0;
+   int exerciseTracker = 0;
+   List<String> allExercises = [];
+   List<int> allTimes = [];
+   final String workoutOver = 'Workout Over';
    Future<KettleBellWorkout>? databaseFuture;
    KettleBellWorkout? kettleBellWorkout;
    bool firstPass = true;
    String currentExerciseName = '';
    String nextExerciseName = '';
+   int currentRepeat = 1;
+   int timesTracker =0;
    @override
    void didChangeDependencies() {
      super.didChangeDependencies();
@@ -129,12 +134,13 @@ class _BeginKettlebellWorkoutState extends State<BeginKettlebellWorkout> {
           );
         } else if (snapshot.hasData) {
           kettleBellWorkout ??= snapshot.data!;
-          //int startingMax = kettlebellworkout.groups[0].work_duration;
           if(kettleBellWorkout != null && firstPass == true){
             maxGroups =  kettleBellWorkout?.groups.length! as int;
             seconds = kettleBellWorkout?.groups[0].work_duration as int;
             workRestMax = kettleBellWorkout?.groups[0].work_rest.length as int;
+            setExerciseData();
             assignExName();
+            assignSeconds();
             firstPass = false;
           }
           return SafeArea(
@@ -145,26 +151,27 @@ class _BeginKettlebellWorkoutState extends State<BeginKettlebellWorkout> {
 
             ),
               body: Center(
-                child: Column (
-                      children: [
-                        Text(currentExerciseName,
-                        style: const TextStyle(fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          fontSize: 80),
-                        ),
-                        buildTime(),
-                        startButton(kettleBellWorkout!),
-                        const Text('Next Exercise',
-                          style: TextStyle(fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              fontSize: 40),
-                        ),
-                        Text(nextExerciseName,
+                child: SingleChildScrollView(
+                  child: Column (
+                        children: [
+                          FittedBox(
+                            fit: BoxFit.fitWidth,
+                            child: Text(currentExerciseName,
                             style: const TextStyle(fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            fontSize: 40),
-                        ),
-                      ],
+                              color: Colors.white,
+                              fontSize: 80),
+                            ),
+                          ),
+                          buildTime(),
+                          startButton(kettleBellWorkout!),
+                          const Text('Next Exercise',
+                            style: TextStyle(fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                fontSize: 40),
+                          ),
+                          nextExercise(),
+                        ],
+                  ),
                 ),
               )
 
@@ -178,41 +185,88 @@ class _BeginKettlebellWorkoutState extends State<BeginKettlebellWorkout> {
     );
   }
 void assignExName(){
-     currentExerciseName = kettleBellWorkout?.groups[currentGroupNum].work_rest[currentWorkRestNum] as String;
-     if (currentWorkRestNum < workRestMax){
-       nextExerciseName = kettleBellWorkout?.groups[currentGroupNum].work_rest[currentWorkRestNum+1] as String;
-     }
-
+    currentExerciseName = allExercises[exerciseTracker];
+    try{
+      nextExerciseName = allExercises[exerciseTracker+1];
+    } catch (e) {
+        developer.log('last exercise');
+    }
+    developer.log('Assigning exercise' + currentExerciseName);
+    exerciseTracker++;
+    developer.log(exerciseTracker.toString());
 }
 
   void stopTimer({bool reset = true}) {
-     if (reset) {
-
-     }
+     if (reset) { }
       setState(() => timer?.cancel());
   }
 
   void assignSeconds() {
-     if(currentWorkRestNum % 2 == 0 ) {
-       seconds = kettleBellWorkout?.groups[currentGroupNum].work_duration as int;
-     }
-     else {
-       seconds = kettleBellWorkout?.groups[currentGroupNum].rest_duration as int;
-     }
-     currentWorkRestNum++;
-     maxSeconds = seconds;
-     if (kettleBellWorkout?.groups[currentGroupNum].work_rest.length as int < currentWorkRestNum) {
-       currentWorkRestNum = 0;
-       currentGroupNum++;
-       if (currentGroupNum > maxGroups){
-         ///TO DO end workout
-         developer.log('ended workout');
-       }
-     }
+      seconds = allTimes[timesTracker];
+      maxSeconds = seconds;
+      timesTracker++;
   }
 
-}
+  void setExerciseData() {
+      int numGroups = kettleBellWorkout?.groups.length as int;
+      for (int i =0; i < numGroups; i++) {
+        int repeat = kettleBellWorkout?.groups[i].repeat as int;
+        List<String> workRest = kettleBellWorkout?.groups[i].work_rest as List<String>;
+        int timeFactor = (workRest.length ~/2);
+        developer.log('This is the time factor ' + timeFactor.toString());
+        List<int> times = [];
+        int workTime =  kettleBellWorkout?.groups[i].work_duration as int;
+        int restTime =  kettleBellWorkout?.groups[i].rest_duration as int;
+        times.add(workTime);
+        times.add(restTime);
+        for (int j = 0; j < repeat; j++) {
+          allExercises.addAll(workRest);
+          for (int k = 0; k< timeFactor; k++){
+            allTimes.addAll(times);
+          }
+        }
+      }
+      allExercises.add(workoutOver);
+      developer.log('All the exercises');
+      developer.log(allExercises.toString());
+      developer.log('All the times');
+      developer.log(allTimes.toString());
 
+
+  }
+
+  Widget nextExercise() {
+     return SizedBox(
+       width: MediaQuery.of(context).size.width-30,
+       height: 100,
+       child: FittedBox(
+         fit: BoxFit.contain,
+         child: Column (
+           children: [
+             Text(nextExerciseName,
+               style: const TextStyle(fontWeight: FontWeight.bold,
+                   color: Colors.white,
+                   fontSize: 28),
+             ),
+             Align(
+               alignment: Alignment.bottomRight,
+               child: IconButton(
+                 onPressed: () {
+                 assignSeconds();
+                 assignExName();
+               }, icon: const Icon(Icons.skip_next, color: Colors.lightBlue,),
+                 tooltip: 'Skip',
+                 iconSize: 38.0,
+               ),
+             ),
+           ],
+         ),
+       )
+     );
+  }
+
+
+}
 
 
 
