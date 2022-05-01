@@ -86,7 +86,7 @@ class KettleBellWorkoutScreen extends StatelessWidget {
     floatingActionButton: FloatingActionButton.extended(
       backgroundColor: Colors.deepPurple,
       onPressed: () {
-      Navigator.pushNamed(context, 'beginKworkout', arguments: {'id': kettleBellWorkout.id });
+      Navigator.pushNamed(context, '/beginKworkout', arguments: {'id': kettleBellWorkout.id });
     },
       icon: const Icon(Icons.fitness_center),
       label: const Text('Begin Workout'),

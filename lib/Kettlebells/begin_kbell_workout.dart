@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:fitness_simplified/Kettlebells/kettlebell_workout_ended.dart';
 import 'package:fitness_simplified/services/firestore.dart';
 import 'package:flutter/material.dart';
 import '../services/firestore.dart';
@@ -38,6 +39,7 @@ class _BeginKettlebellWorkoutState extends State<BeginKettlebellWorkout> {
    String nextExerciseName = '';
    int currentRepeat = 1;
    int timesTracker =0;
+   bool lastExercise = true;
    @override
    void didChangeDependencies() {
      super.didChangeDependencies();
@@ -91,7 +93,7 @@ class _BeginKettlebellWorkoutState extends State<BeginKettlebellWorkout> {
     );
   }
 
-   Widget buildTime(){
+   Widget buildTime() {
      return SafeArea(
         minimum: const EdgeInsets.only(top: 15, bottom: 15),
        child: SizedBox(
@@ -100,12 +102,13 @@ class _BeginKettlebellWorkoutState extends State<BeginKettlebellWorkout> {
          child: Stack(
            fit: StackFit.expand,
            children: [
-             CircularProgressIndicator(
+             lastExercise ? CircularProgressIndicator(
                value: seconds / maxSeconds,
                strokeWidth: 18,
                color: Colors.pinkAccent,
 
-             ),
+             ):
+             const Text(''),
              Center(
                child: Text('$seconds',
                  style: const TextStyle(
@@ -202,7 +205,13 @@ void assignExName(){
   }
 
   void assignSeconds() {
-      seconds = allTimes[timesTracker];
+     try {
+       seconds = allTimes[timesTracker];
+     } on RangeError {
+       lastExercise = false;
+          developer.log('end workout');
+          Navigator.pushNamedAndRemoveUntil(context, '/endKettlebellWorkout', (_) => false  );
+     }
       maxSeconds = seconds;
       timesTracker++;
   }
