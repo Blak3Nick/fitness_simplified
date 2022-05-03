@@ -50,8 +50,16 @@ class KettleBellWorkoutsScreen extends StatelessWidget {
               children: kettlebellworkouts.map<Widget>((kettlebellworkout) => KbellGroup(kettleBellWorkout: kettlebellworkout)).toList(),
 
             ),
-
+            floatingActionButton: FloatingActionButton.extended(
+              onPressed: () {
+                Navigator.pushNamed(context, '/createKettlebellWorkout');
+              },
+              label: const Text('Add New Workout'),
+              icon: const Icon(Icons.thumb_up),
+              backgroundColor: Colors.pink,
+            ),
             bottomNavigationBar: const BottomNavBar(),
+
           );
         } else {
           return const Text('No workouts found. Contact Support');
