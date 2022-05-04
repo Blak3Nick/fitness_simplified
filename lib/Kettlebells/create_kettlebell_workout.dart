@@ -1,6 +1,7 @@
 
 
 
+import 'package:fitness_simplified/Kettlebells/reactive_form.dart';
 import 'package:fitness_simplified/Kettlebells/temp.dart';
 import 'package:flutter/material.dart';
 
@@ -119,7 +120,7 @@ class _CreateKettleBellWorkoutState extends State<CreateKettleBellWorkout> {
                         iconSize: 40,
 
                         onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => const Temp()));
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => const KettlebellReactiveForm()));
                         }),
                   ),
                 ],
