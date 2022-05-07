@@ -18,6 +18,8 @@ class _ReactiveFormState extends State<KettlebellReactiveForm> {
   List<int> allCircuits = [];
   int circuitTracker = 0;
   UniqueKey redrawObject = UniqueKey();
+  Map<int, Widget> circuitCards= {};
+  TextEditingController textEditingController = TextEditingController();
   final form = FormGroup({
     'workoutName': FormControl<String>(validators: [Validators.required]),
   });
@@ -78,8 +80,14 @@ class _ReactiveFormState extends State<KettlebellReactiveForm> {
     ));
   }
 
-Widget newCircuit(BuildContext context, int index) {
-  String circuitLabel = 'Circuit $index';
+Widget newCircuit(BuildContext context, int localIndex) {
+  String circuitLabel = 'Circuit $localIndex';
+  for(int i =0; i < circuitIndex; i ++) {
+    circuitCards.putIfAbsent(i, () => circuitInterior(localIndex));
+    developer.log('this is the i value $i');
+
+  }
+
     return  ListView.separated(
         shrinkWrap: true,
         physics: const ScrollPhysics(),
@@ -88,7 +96,7 @@ Widget newCircuit(BuildContext context, int index) {
           children: [
             Row(
               children: [
-                Flexible(child: circuitInterior(circuitIndex))
+                Flexible(child: circuitCards[index] as Widget)
               ],
             )
           ],
@@ -98,18 +106,17 @@ Widget newCircuit(BuildContext context, int index) {
       itemCount: circuitIndex);
 }
 
-Widget circuitInterior(int index) {
-    developer.log('This is the index in circuit $index');
-    String ex1Name = 'C$circuitIndex' ' ex1';
-    String ex1Time = 'c$circuitIndex' ' ex1Time';
-    String ex2Name = 'C$circuitIndex' ' ex2';
-    String ex2Time = 'c$circuitIndex' ' ex2Time';
+Widget circuitInterior(int localIndex) {
+    developer.log('the local index at time of creation is $localIndex');
+    String ex1Name = 'C$circuitIndex' 'ex1';
+    String ex1Time = 'c$circuitIndex' 'ex1Time';
+    String ex2Name = 'C$circuitIndex' 'ex2';
+    String ex2Time = 'c$circuitIndex' 'ex2Time';
     form.addAll({ex1Name: FormControl<String>(validators: [Validators.required])} );
     form.addAll({ex1Time: FormControl<String>(validators: [Validators.required])} );
     form.addAll({ex2Name: FormControl<String>(validators: [Validators.required])} );
     form.addAll({ex2Time: FormControl<String>(validators: [Validators.required])} );
-    allCircuits.add(index);
-    developer.log('Circuit index is:  $circuitIndex');
+    allCircuits.add(localIndex);
     UniqueKey buttonKey = UniqueKey();
     return  Card(
             child: Column(
@@ -119,7 +126,6 @@ Widget circuitInterior(int index) {
                         Flexible(
                           child: getReactiveTextField(ex1Name, 'First Exercise', TextInputType.text),
                         ),
-
                         Flexible(
                           child: ReactiveTextField(
                             formControlName: ex1Time,
@@ -164,18 +170,19 @@ Widget circuitInterior(int index) {
                     ],
                   ),
                   IconButton(
-
-                      key: Key(index.toString()),
                       icon: const Icon(Icons.delete, color: Colors.redAccent),
                       onPressed: (){
                         setState(() {
-                          developer.log('The key for the button is ');
                           circuitIndex--;
-                          developer.log('the index is $circuitIndex');
+                          developer.log('the local index is $localIndex');
+                          developer.log('the circuit index is $circuitIndex');
                           circuitMaps.remove(ex1Name);
                           circuitMaps.remove(ex1Time);
                           circuitMaps.remove(ex2Name);
                           circuitMaps.remove(ex2Time);
+                          developer.log(ex2Time + ' is the ex 2 name');
+                          developer.log(circuitCards.remove(localIndex).toString());
+                          developer.log(circuitCards.values.toString());
                           buttonKey = UniqueKey();
                         });
 
@@ -186,11 +193,10 @@ Widget circuitInterior(int index) {
 }
 
   ReactiveTextField getReactiveTextField(String formName, String label, TextInputType type) {
-      if (circuitMaps.containsKey(formName)) {
+      // if (circuitMaps.containsKey(formName)) {
+      //   return circuitMaps[formName] as ReactiveTextField;
+      // }
 
-        developer.log(form.value[formName].toString() + ' is value of the form');
-        return circuitMaps[formName] as ReactiveTextField;
-      }
       ReactiveTextField textField = ReactiveTextField(
         formControlName: formName,
         keyboardType: type,
