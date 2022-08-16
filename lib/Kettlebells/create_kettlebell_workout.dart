@@ -135,6 +135,7 @@ class _CreateKettleBellWorkoutState extends State<CreateKettleBellWorkout> {
         // When the user presses the button, show an alert dialog containing
         // the text that the user has entered into the text field.
         onPressed: () {
+          addKWorkout();
           showDialog(
             context: context,
             builder: (context) {
@@ -161,7 +162,7 @@ class _CreateKettleBellWorkoutState extends State<CreateKettleBellWorkout> {
     groups.add(group1);
     FirestoreService firestoreService = FirestoreService();
     Future upload() async {
-      firestoreService.addNewKettlebellWorkout(groups, 'test');
+      firestoreService.addNewKettlebellWorkout(groups, 'test2');
     }
     upload();
   }
