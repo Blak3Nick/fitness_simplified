@@ -5,14 +5,29 @@ import 'package:fitness_simplified/models.dart';
 
 
 class WorkoutTemplate {
-  int repeat;
-  String title;
-  int work_duration;
-  int rest_duration;
-  List<String> work_rest ;
+  List<Group> groups;
+  List<String> work_rest = [];
 
-  WorkoutTemplate(this.repeat, this.title, this.work_duration,
-      this.rest_duration, this.work_rest);
+  WorkoutTemplate( this.groups);
+
+  void addGroup(Group group) {
+    groups.add(group);
+  }
+
+}
+
+class WorkRestPair {
+      String workName;
+      int workDuration;
+      int restDuration;
+
+      WorkRestPair(this.workName, this.workDuration, this.restDuration);
+      void addWorkRest(){
+
+      }
+      void createGroup(String title, ){
+
+      }
 }
 
 
