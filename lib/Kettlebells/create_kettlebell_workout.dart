@@ -23,6 +23,21 @@ class _CreateKettleBellWorkoutState extends State<CreateKettleBellWorkout> {
   // Create a text controller and use it to retrieve the current value
   // of the TextField.
   final myController = TextEditingController();
+  final exerciseController = TextEditingController();
+  final exerciseDurationController = TextEditingController();
+  final restDurationController = TextEditingController();
+  String workoutName = "";
+  bool isName = true;
+  bool atLeastOneCircuit = false;
+  int circuitNumber = 1;
+  List<Group> groups = [];
+  int currentRepeat = 1;
+  int currentWorkDuration = 1;
+  int currentRestDuration = 1;
+  List<String> currentWorkRest = [];
+  int numberOfExercises = 1;
+
+
 
   @override
   void dispose() {
@@ -39,131 +54,188 @@ class _CreateKettleBellWorkoutState extends State<CreateKettleBellWorkout> {
         backgroundColor: Colors.deepPurple,
       ),
       body:
-        Column(
-          children: [
-            Card(
-              child: TextField(
-                controller: myController,
-                decoration: const InputDecoration(
-                  labelText: "Enter the Name of the Workout",
+        Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Visibility(
+                  visible: isName,
+                  child: const Text("Let's build the workout!",
+                      style: TextStyle(fontSize: 35)),
                 ),
-              ),
-            ),
-           Card(
-            child: SizedBox(
-              child: Column(
-                children: [
-                  Center(
-                    child: Row(
-                      children: const [
-                        Text('Circuit 1'),
-                      ],
-                    ),
-                  ),
-                Row(
-                    children: [
-                      Flexible(
-                        child: TextField(
-                          controller: myController,
-                          decoration: const InputDecoration(
-                            labelText: "First Exercise",
-                            border: OutlineInputBorder(
-                            ),
-                          ),
-
-                        ),
-                      ),
-                      const Spacer(),
-                      Flexible(
-                        child: TextField(
-                          controller: myController,
-                          keyboardType: TextInputType.number,
-                          decoration: const InputDecoration(
-                            labelText: "Time",
-                            border: OutlineInputBorder(
-                            ),
-                          ),
-                        ),
-                      ),
+                Visibility(
+                  visible: !isName,
+                  child: Text("Circuit $circuitNumber",
+                      style: const TextStyle(fontSize: 35)),)
                     ],
-                ),
-                  Row(
-                    children: [
-                      Flexible(
-                        child: TextField(
-                          controller: myController,
-                          decoration: const InputDecoration(
-                            labelText: "Second Exercise",
-                            border: OutlineInputBorder(
-                            ),
-                          ),
-
-                        ),
-                      ),
-                      const Spacer(),
-                      Flexible(
-                        child: TextField(
-                          controller: myController,
-                          keyboardType: TextInputType.number,
-                          decoration: const InputDecoration(
-                            labelText: "Time",
-                            border: OutlineInputBorder(
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Center(
-                    child:
-                    IconButton(
-                        icon: const Icon(Icons.add_circle, color: Colors.deepPurple),
-                        iconSize: 40,
-
-                        onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => const KettlebellReactiveForm()));
-                        }),
-                  ),
-                ],
-              ),
             ),
+
           ),
-          ],
 
-        ),
-
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: TextButton(
         // When the user presses the button, show an alert dialog containing
         // the text that the user has entered into the text field.
-        onPressed: () {
-          addKWorkout();
+        onPressed: () {          
           showDialog(
             context: context,
-            builder: (context) {
-              return AlertDialog(
-                // Retrieve the text the that user has entered by using the
-                // TextEditingController.
-                content: Text(myController.text),
-              );
-            },
+            builder: (isName)
+                ? (BuildContext context) => _buildWorkoutNamePopup(context)
+                : (BuildContext context) => _buildCircuitPopup(context)
           );
         },
-        tooltip: 'Show me the value!',
-        child: const Icon(Icons.text_fields),
+        child: Row(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child:(atLeastOneCircuit)
+                  ? const Text("Finish Workout",
+                  style: TextStyle(
+                      fontSize: 25,
+                      color: Colors.red,
+                  ),
+              ) : null,
+            ),
+            const Spacer(),
+            const Text("Next", style: TextStyle(fontSize: 25)),
+          ],
+        ),
       ),
 
     );
   }
+
+  Widget _buildWorkoutNamePopup(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Confirm the workout name'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          TextField(
+            controller: myController,
+            decoration: const InputDecoration(
+              labelText: "Enter the Name of the Workout",
+            ),
+          ),
+        ],
+      ),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          style: TextButton.styleFrom(
+            primary: Colors.red,
+          ),
+          child: const Text('Cancel'),
+        ),
+        TextButton(
+          onPressed: () {
+            workoutName = myController.text;
+            isName = false;
+            test();
+            setState(() {
+              isName = isName;
+            });
+            Navigator.of(context).pop();
+
+          },
+          child: const Text('Confirm'),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCircuitPopup(BuildContext context) {
+    return AlertDialog(
+      title: const Text('How many Exercises in first Circuit?'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          TextField(
+            controller: exerciseController,
+            keyboardType: TextInputType.number,
+            decoration: const InputDecoration(
+              labelText: "Number of Exercises",
+            ),
+          ),
+          TextField(
+            controller: exerciseDurationController,
+            keyboardType: TextInputType.number,
+            decoration: const InputDecoration(
+              labelText: "Work Duration",
+            ),
+          ),
+          TextField(
+            controller: restDurationController,
+            keyboardType: TextInputType.number,
+            decoration: const InputDecoration(
+              labelText: "Rest Duration",
+            ),
+          ),
+        ],
+      ),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () {
+            clearCircuit();
+            Navigator.of(context).pop();
+          },
+          style: TextButton.styleFrom(
+            primary: Colors.red,
+          ),
+          child: const Text('Cancel'),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          style: TextButton.styleFrom(
+            primary: Colors.amberAccent,
+          ),
+          child: const Text('Add exercise'),
+        ),
+        TextButton(
+          onPressed: () {
+            workoutName = myController.text;
+            isName = false;
+            test();
+            setState(() {
+              isName = isName;
+            });
+            Navigator.of(context).pop();
+
+          },
+          child: const Text('Finish'),
+        ),
+      ],
+    );
+  }
+
+  void test(){
+    print(workoutName);
+    print(isName);
+
+  }
+  void clearCircuit() {
+    currentRepeat = 1;
+    currentWorkDuration = 1;
+    currentRestDuration = 1;
+    currentWorkRest.clear();
+    numberOfExercises = 1;
+  }
+  void addToGroup(int repeat, int restDuration, int workDuration, List<String> workRest){
+      Group group = Group( repeat: repeat, title: "Group $circuitNumber", work_duration: workDuration, rest_duration: restDuration, work_rest: workRest);
+      groups.add(group);
+  }
+
+
   void addKWorkout() {
-    List<String> strings = ['Swing', 'Rest'];
-    Group group = Group(repeat: 1, title: 'Set 1', work_duration: 10, rest_duration: 10, work_rest: strings );
-    List<Group> groups = [];
-    groups.add(group);
-    Group group1 = Group(repeat: 1, title: 'Set 2', work_duration: 10, rest_duration: 10, work_rest: strings );
-    groups.add(group1);
     FirestoreService firestoreService = FirestoreService();
     Future upload() async {
-      firestoreService.addNewKettlebellWorkout(groups, 'test2');
+      firestoreService.addNewKettlebellWorkout(groups, workoutName);
     }
     upload();
   }
