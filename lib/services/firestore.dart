@@ -7,7 +7,6 @@ import '../models.dart';
 import 'auth.dart';
 import 'dart:developer' as developer;
 
-
 class FirestoreService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
@@ -29,6 +28,7 @@ class FirestoreService {
     developer.log(data.toString());
     return kbell_workouts.toList();
   }
+
   Future<KettleBellWorkout> getKWorkout(String kId) async {
     developer.log(kId);
     var ref = _db.collection('KettleBellWorkouts').doc(kId);
@@ -38,7 +38,6 @@ class FirestoreService {
     developer.log(snapshot.data().toString());
     return KettleBellWorkout.fromJson(snapshot.data() ?? {});
   }
-
 
   /// Retrieves a single quiz document
   Future<Quiz> getQuiz(String quizId) async {
@@ -75,21 +74,21 @@ class FirestoreService {
 
     return ref.set(data, SetOptions(merge: true));
   }
+
   /// Updates the current user's report document after completing quiz
   Future<void> addNewKettlebellWorkout(List groups, String id) {
     //var user = AuthService().user!;
     var ref = _db.collection('KettleBellWorkouts').doc(id);
     var data = <String, dynamic>{};
     List myGroups = [];
-    for (int i =0; i < groups.length; i++) {
+    for (int i = 0; i < groups.length; i++) {
       Group group = groups[i] as Group;
       final nestedData = {
-        'repeat' : group.repeat,
-        'title'  : group.title,
-        "rest_duration" : group.rest_duration,
-        "work_duration" : group.work_duration,
-        'work_rest' : group.work_rest,
-       };
+        'repeat': group.repeat,
+        "rest_duration": group.rest_duration,
+        "work_duration": group.work_duration,
+        'work_rest': group.work_rest,
+      };
       myGroups.add(nestedData);
     }
     data['id'] = id;
@@ -97,6 +96,4 @@ class FirestoreService {
 
     return ref.set(data, SetOptions(merge: true));
   }
-
-
 }

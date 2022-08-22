@@ -1,20 +1,14 @@
-
-
-
-import 'package:fitness_simplified/Kettlebells/kbell_workout_template.dart';
-import 'package:fitness_simplified/Kettlebells/reactive_form.dart';
-import 'package:fitness_simplified/Kettlebells/temp.dart';
 import 'package:flutter/material.dart';
 
 import '../models.dart';
 import '../services/firestore.dart';
 
-
 class CreateKettleBellWorkout extends StatefulWidget {
   const CreateKettleBellWorkout({Key? key}) : super(key: key);
 
   @override
-  _CreateKettleBellWorkoutState createState() => _CreateKettleBellWorkoutState();
+  _CreateKettleBellWorkoutState createState() =>
+      _CreateKettleBellWorkoutState();
 }
 
 // Define a corresponding State class.
@@ -37,8 +31,6 @@ class _CreateKettleBellWorkoutState extends State<CreateKettleBellWorkout> {
   List<String> currentWorkRest = [];
   int numberOfExercises = 1;
 
-
-
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
@@ -53,55 +45,53 @@ class _CreateKettleBellWorkoutState extends State<CreateKettleBellWorkout> {
         title: const Text('New Kettlebell Workout'),
         backgroundColor: Colors.deepPurple,
       ),
-      body:
-        Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Visibility(
-                  visible: isName,
-                  child: const Text("Let's build the workout!",
-                      style: TextStyle(fontSize: 35)),
-                ),
-                Visibility(
-                  visible: !isName,
-                  child: Text("Circuit $circuitNumber",
-                      style: const TextStyle(fontSize: 35)),)
-                    ],
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Visibility(
+              visible: isName,
+              child: const Text("Let's build the workout!",
+                  style: TextStyle(fontSize: 35)),
             ),
-
-          ),
-
+            Visibility(
+              visible: !isName,
+              child: Text("Circuit $circuitNumber",
+                  style: const TextStyle(fontSize: 35)),
+            )
+          ],
+        ),
+      ),
       floatingActionButton: TextButton(
         // When the user presses the button, show an alert dialog containing
         // the text that the user has entered into the text field.
-        onPressed: () {          
+        onPressed: () {
           showDialog(
-            context: context,
-            builder: (isName)
-                ? (BuildContext context) => _buildWorkoutNamePopup(context)
-                : (BuildContext context) => _buildCircuitPopup(context)
-          );
+              context: context,
+              builder: (isName)
+                  ? (BuildContext context) => _buildWorkoutNamePopup(context)
+                  : (BuildContext context) => _buildCircuitPopup(context));
         },
         child: Row(
           children: [
             Padding(
               padding: const EdgeInsets.all(10.0),
-              child:(atLeastOneCircuit)
-                  ? const Text("Finish Workout",
-                  style: TextStyle(
-                      fontSize: 25,
-                      color: Colors.red,
-                  ),
-              ) : null,
+              child: (atLeastOneCircuit)
+                  ? const Text(
+                      "Finish Workout",
+                      style: TextStyle(
+                        fontSize: 25,
+                        color: Colors.red,
+                      ),
+                    )
+                  : null,
             ),
             const Spacer(),
             const Text("Next", style: TextStyle(fontSize: 25)),
           ],
         ),
       ),
-
     );
   }
 
@@ -139,7 +129,6 @@ class _CreateKettleBellWorkoutState extends State<CreateKettleBellWorkout> {
               isName = isName;
             });
             Navigator.of(context).pop();
-
           },
           child: const Text('Confirm'),
         ),
@@ -206,7 +195,6 @@ class _CreateKettleBellWorkoutState extends State<CreateKettleBellWorkout> {
               isName = isName;
             });
             Navigator.of(context).pop();
-
           },
           child: const Text('Finish'),
         ),
@@ -214,11 +202,11 @@ class _CreateKettleBellWorkoutState extends State<CreateKettleBellWorkout> {
     );
   }
 
-  void test(){
+  void test() {
     print(workoutName);
     print(isName);
-
   }
+
   void clearCircuit() {
     currentRepeat = 1;
     currentWorkDuration = 1;
@@ -226,17 +214,23 @@ class _CreateKettleBellWorkoutState extends State<CreateKettleBellWorkout> {
     currentWorkRest.clear();
     numberOfExercises = 1;
   }
-  void addToGroup(int repeat, int restDuration, int workDuration, List<String> workRest){
-      Group group = Group( repeat: repeat, title: "Group $circuitNumber", work_duration: workDuration, rest_duration: restDuration, work_rest: workRest);
-      groups.add(group);
-  }
 
+  void addToGroup(int repeat, int restDuration, List<int> workDuration,
+      List<String> workRest) {
+    Group group = Group(
+        repeat: repeat,
+        work_duration: workDuration,
+        rest_duration: restDuration,
+        work_rest: workRest);
+    groups.add(group);
+  }
 
   void addKWorkout() {
     FirestoreService firestoreService = FirestoreService();
     Future upload() async {
       firestoreService.addNewKettlebellWorkout(groups, workoutName);
     }
+
     upload();
   }
 }

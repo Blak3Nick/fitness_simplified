@@ -1,14 +1,13 @@
-import 'package:fitness_simplified/services/firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import '../models.dart';
 import 'kbell_workout_overview_widget.dart';
 
-
 class KettleBellWorkoutDrawer extends StatelessWidget {
   final List<KettleBellWorkout> kbellworkouts;
-  const KettleBellWorkoutDrawer({ Key? key, required this.kbellworkouts}) : super(key: key);
+  const KettleBellWorkoutDrawer({Key? key, required this.kbellworkouts})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +33,6 @@ class KettleBellWorkoutDrawer extends StatelessWidget {
                   ),
                 ),
                 KWorkoutList(kettlebellworkout: kbellworkout),
-
               ],
             );
           },
@@ -45,16 +43,17 @@ class KettleBellWorkoutDrawer extends StatelessWidget {
 
 class KWorkoutList extends StatelessWidget {
   final KettleBellWorkout kettlebellworkout;
-  const KWorkoutList({Key? key, required this.kettlebellworkout}) : super(key: key);
+  const KWorkoutList({Key? key, required this.kettlebellworkout})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: kettlebellworkout.groups.map(
-            (group) {
+        (group) {
           return Card(
             shape:
-            const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
             elevation: 4,
             margin: const EdgeInsets.all(4),
             child: InkWell(
@@ -62,7 +61,8 @@ class KWorkoutList extends StatelessWidget {
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (BuildContext context) =>
-                        ScrollableKettlebellWidget(kettleBellWorkout: kettlebellworkout),
+                        ScrollableKettlebellWidget(
+                            kettleBellWorkout: kettlebellworkout),
                   ),
                 );
               },
@@ -70,11 +70,11 @@ class KWorkoutList extends StatelessWidget {
                 padding: const EdgeInsets.all(8),
                 child: ListTile(
                   title: Text(
-                    group.title,
+                    "group.title",
                     style: Theme.of(context).textTheme.headline5,
                   ),
                   subtitle: Text(
-                    group.title,
+                    "group.title",
                     overflow: TextOverflow.fade,
                     style: Theme.of(context).textTheme.subtitle2,
                   ),

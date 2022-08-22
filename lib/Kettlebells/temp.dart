@@ -22,12 +22,8 @@ class _CreateKettleBellWorkoutState extends State<Temp> {
   static List<String> friendsList = [''];
   static List<Group> groupList = [];
   List<String> strings = ['Swing', 'Rest'];
-  Group group = Group(
-      repeat: 1,
-      title: 'Set 1',
-      work_duration: 10,
-      rest_duration: 10,
-      work_rest: []);
+  Group group =
+      Group(repeat: 1, work_duration: [0], rest_duration: 10, work_rest: []);
 
   @override
   void initState() {
