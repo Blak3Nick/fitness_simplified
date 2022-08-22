@@ -19,6 +19,7 @@ class _ReactiveFormState extends State<KettlebellReactiveForm> {
     'workoutName': FormControl<String>(validators: [Validators.required]),
   });
   Map<String, ReactiveTextField> circuitMaps = {};
+  List<int> currentCircuits = [];
 
   @override
   Widget build(BuildContext context) {
@@ -52,12 +53,13 @@ class _ReactiveFormState extends State<KettlebellReactiveForm> {
                 Padding(
                   key: redrawObject,
                   padding: const EdgeInsets.all(10),
-                  child: newCircuit(context, circuitIndex),
+                  child: newCircuit(context, 2),
                 ),
                 TextButton(
                   onPressed: () {
                     setState(() {
                       circuitIndex += 1;
+                      circuitTracker++;
                       redrawObject = UniqueKey();
                     });
                   },
@@ -76,11 +78,13 @@ class _ReactiveFormState extends State<KettlebellReactiveForm> {
                         if (circuitCards.length > 1) {
                           circuitIndex--;
                           circuitCards.remove(circuitIndex);
+                          currentCircuits.removeLast();
+                          circuitTracker--;
                         }
                         redrawObject = UniqueKey();
                       });
                     },
-                    label: const Text('Delete Circuit'),
+                    label: const Text('Delete Last Circuit'),
                     icon: const Icon(Icons.delete, color: Colors.redAccent),
                     backgroundColor: Colors.grey,
                   )
@@ -91,10 +95,14 @@ class _ReactiveFormState extends State<KettlebellReactiveForm> {
   }
 
   Widget newCircuit(BuildContext context, int localIndex) {
-    String circuitLabel = 'Circuit $localIndex';
+    currentCircuits.add(2);
+    bool addButton = false;
+
     for (int i = 0; i < circuitIndex; i++) {
-      circuitCards.putIfAbsent(i, () => circuitInterior(localIndex));
-      developer.log('this is the i value $i');
+      if (i == circuitIndex - 1) {
+        addButton = true;
+      }
+      circuitCards.putIfAbsent(i, () => circuitInterior(localIndex, addButton));
     }
 
     return ListView.separated(
@@ -113,92 +121,84 @@ class _ReactiveFormState extends State<KettlebellReactiveForm> {
         itemCount: circuitIndex);
   }
 
-  Widget circuitInterior(int localIndex) {
-    developer.log('the local index at time of creation is $localIndex');
-    String ex1Name = 'C$circuitIndex' 'ex1';
-    String ex1Time = 'c$circuitIndex' 'ex1Time';
-    String ex2Name = 'C$circuitIndex' 'ex2';
-    String ex2Time = 'c$circuitIndex' 'ex2Time';
-    form.addAll({
-      ex1Name: FormControl<String>(validators: [Validators.required])
-    });
-    form.addAll({
-      ex1Time: FormControl<String>(validators: [Validators.required])
-    });
-    form.addAll({
-      ex2Name: FormControl<String>(validators: [Validators.required])
-    });
-    form.addAll({
-      ex2Time: FormControl<String>(validators: [Validators.required])
-    });
+  Widget circuitInterior(int localIndex, bool addButton) {
+    List<String> allExNames = [];
+    List<String> allExTimes = [];
+    int maxCircuits = currentCircuits[circuitTracker];
+    developer.log(' Max circuits:  $maxCircuits');
+    for (int i = 1; i <= maxCircuits; i++) {
+      String exName = 'C$circuitIndex' 'ex$i';
+      String exTime = 'C$circuitIndex' 'ex$i' 'time';
+      allExNames.add(exName);
+      allExTimes.add(exTime);
+      form.addAll({
+        exName: FormControl<String>(validators: [Validators.required])
+      });
+
+      form.addAll({
+        exTime: FormControl<String>(validators: [Validators.required])
+      });
+    }
+    final int thisTracker = circuitTracker;
     allCircuits.add(localIndex);
+    int itemCount = maxCircuits ~/ 2;
     UniqueKey buttonKey = UniqueKey();
     return Card(
-      child: Column(children: [
-        Row(children: [
-          Flexible(
-            child: getReactiveTextField(
-                ex1Name, 'First Exercise', TextInputType.text),
-          ),
-          Flexible(
-            child: ReactiveTextField(
-              formControlName: ex1Time,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'Duration',
-                border: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.blueGrey, width: 5.0),
-                ),
-              ),
-            ),
-          ),
-        ]),
-        Row(
-          children: [
+        child: ListView.builder(
+      shrinkWrap: true,
+      itemBuilder: (context, index) {
+        return Column(children: [
+          Row(children: [
             Flexible(
-              child: ReactiveTextField(
-                formControlName: ex2Name,
-                decoration: const InputDecoration(
-                  labelText: 'Second Exercise',
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blueGrey, width: 5.0),
-                  ),
-                ),
-              ),
+              child: getReactiveTextField(
+                  allExNames[index], 'Exercise', TextInputType.text),
             ),
             Flexible(
-              child: ReactiveTextField(
-                formControlName: ex2Time,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  labelText: 'Duration',
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blueGrey, width: 5.0),
-                  ),
-                ),
-              ),
+              child: getReactiveTextField(
+                  allExTimes[index], 'Time', TextInputType.number),
             ),
-          ],
-        ),
-        IconButton(
-            icon: const Icon(Icons.delete, color: Colors.redAccent),
-            onPressed: () {
-              setState(() {
-                circuitIndex--;
-                developer.log('the local index is $localIndex');
-                developer.log('the circuit index is $circuitIndex');
-                circuitMaps.remove(ex1Name);
-                circuitMaps.remove(ex1Time);
-                circuitMaps.remove(ex2Name);
-                circuitMaps.remove(ex2Time);
-                developer.log(ex2Time + ' is the ex 2 name');
-                developer.log(circuitCards.remove(localIndex).toString());
-                developer.log(circuitCards.values.toString());
-                buttonKey = UniqueKey();
-              });
-            })
-      ]),
-    );
+          ]),
+          Row(
+            children: [
+              Flexible(
+                  child: getReactiveTextField(
+                      allExTimes[index + 1], 'Exercise', TextInputType.text)),
+              Flexible(
+                child: getReactiveTextField(
+                    allExTimes[index + 1], 'Time', TextInputType.number),
+              ),
+            ],
+          ),
+          if (itemCount == index + 1 && addButton == true)
+            Row(
+              children: [
+                IconButton(
+                    icon: const Icon(Icons.add, color: Colors.deepPurple),
+                    onPressed: () {
+                      setState(() {
+                        currentCircuits[thisTracker] += 2;
+
+                        circuitCards[thisTracker] =
+                            circuitInterior(2, addButton);
+                        buttonKey = UniqueKey();
+                      });
+                    }),
+                IconButton(
+                    icon: const Icon(Icons.delete, color: Colors.red),
+                    onPressed: () {
+                      setState(() {
+                        currentCircuits[thisTracker] -= 2;
+                        circuitCards[thisTracker] =
+                            circuitInterior(2, addButton);
+                        buttonKey = UniqueKey();
+                      });
+                    }),
+              ],
+            )
+        ]);
+      },
+      itemCount: itemCount,
+    ));
   }
 
   ReactiveTextField getReactiveTextField(
@@ -218,7 +218,6 @@ class _ReactiveFormState extends State<KettlebellReactiveForm> {
       ),
     );
     circuitMaps.putIfAbsent(formName, () => textField);
-    developer.log(textField.runtimeType.toString());
     return textField;
   }
 
