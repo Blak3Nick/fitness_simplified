@@ -26,7 +26,7 @@ class _CreateKettleBellWorkoutState extends State<CreateKettleBellWorkout> {
   int circuitNumber = 1;
   List<Group> groups = [];
   int currentRepeat = 1;
-  int currentWorkDuration = 1;
+  List<int> currentWorkDuration = [];
   int currentRestDuration = 1;
   List<String> currentWorkRest = [];
   int numberOfExercises = 1;
@@ -209,20 +209,20 @@ class _CreateKettleBellWorkoutState extends State<CreateKettleBellWorkout> {
 
   void clearCircuit() {
     currentRepeat = 1;
-    currentWorkDuration = 1;
+    currentWorkDuration.clear();
     currentRestDuration = 1;
     currentWorkRest.clear();
     numberOfExercises = 1;
   }
 
-  void addToGroup(int repeat, int restDuration, List<int> workDuration,
-      List<String> workRest) {
+  void addToGroup() {
     Group group = Group(
-        repeat: repeat,
-        work_duration: workDuration,
-        rest_duration: restDuration,
-        work_rest: workRest);
+        repeat: currentRepeat,
+        work_duration: currentWorkDuration,
+        rest_duration: currentRestDuration,
+        work_rest: currentWorkRest);
     groups.add(group);
+    clearCircuit();
   }
 
   void addKWorkout() {
