@@ -19,7 +19,7 @@ class _CreateKettleBellWorkoutState extends State<CreateKettleBellWorkout> {
   final _formKey = GlobalKey<FormState>();
   final myController = TextEditingController();
   final exerciseController = TextEditingController();
-  final exerciseDurationController = TextEditingController();
+  final workRestController = TextEditingController();
   final repeatNumberController = TextEditingController();
   String workoutName = "";
   bool isName = true;
@@ -58,8 +58,21 @@ class _CreateKettleBellWorkoutState extends State<CreateKettleBellWorkout> {
             ),
             Visibility(
               visible: !isName,
-              child: Text("Circuit $circuitNumber",
-                  style: const TextStyle(fontSize: 35)),
+              child: Flexible(
+                flex: 1,
+                child: Column(
+                  children: [
+                    const Text("Current Circuit List"),
+                    ListView.builder(
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemCount: currentWorkRest.length,
+                        itemBuilder: (BuildContext ctxt, int index) {
+                          return Center(child: Text(currentWorkRest[index]));
+                        }),
+                  ],
+                ),
+              ),
             )
           ],
         ),
@@ -104,7 +117,6 @@ class _CreateKettleBellWorkoutState extends State<CreateKettleBellWorkout> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           TextField(
-
             controller: myController,
             decoration: const InputDecoration(
               labelText: "Enter the Name of the Workout",
@@ -126,15 +138,17 @@ class _CreateKettleBellWorkoutState extends State<CreateKettleBellWorkout> {
           valueListenable: myController,
           builder: (context, value, child) {
             return ElevatedButton(
-              onPressed: value.text.isNotEmpty ? () {
-                workoutName = myController.text;
-                isName = false;
-                test();
-                setState(() {
-                isName = isName;
-                });
-                Navigator.of(context).pop();
-              } : null,
+              onPressed: value.text.isNotEmpty
+                  ? () {
+                      workoutName = myController.text;
+                      isName = false;
+                      test();
+                      setState(() {
+                        isName = isName;
+                      });
+                      Navigator.of(context).pop();
+                    }
+                  : null,
               child: const Text('Confirm'),
             );
           },
@@ -146,160 +160,93 @@ class _CreateKettleBellWorkoutState extends State<CreateKettleBellWorkout> {
   Widget _buildCircuitPopup(BuildContext context) {
     return AlertDialog(
       title: const Text('How many times will this circuit be repeated?'),
-      content:
-        formWidget(context),
-      // Column(
-      //   mainAxisSize: MainAxisSize.min,
-      //   crossAxisAlignment: CrossAxisAlignment.start,
-      //   children: <Widget>[
-      //     TextField(
-      //       controller: repeatNumberController,
-      //       keyboardType: TextInputType.number,
-      //       decoration: const InputDecoration(
-      //         labelText: "Circuit repeats",
-      //       ),
-      //     ),
-      //     TextField(
-      //       controller: exerciseDurationController,
-      //       keyboardType: TextInputType.number,
-      //       decoration: const InputDecoration(
-      //         labelText: "Work Duration",
-      //       ),
-      //     ),
-      //     TextField(
-      //       controller: exerciseController,
-      //       keyboardType: TextInputType.text,
-      //       decoration: const InputDecoration(
-      //         labelText: "First Exercise Name",
-      //       ),
-      //     ),
-      //   ],
-      // ),
-      // actions: <Widget>[
-      //   TextButton(
-      //     onPressed: () {
-      //       clearCircuit();
-      //       isName = true;
-      //       test();
-      //       setState(() {
-      //         isName = isName;
-      //       });
-      //       Navigator.of(context).pop();
-      //     },
-      //     style: TextButton.styleFrom(
-      //       primary: Colors.red,
-      //     ),
-      //     child: const Text('Cancel'),
-      //   ),
-      //   TextButton(
-      //     onPressed: () {
-      //       currentRepeat = int.parse(repeatNumberController.text);
-      //       currentWorkRest.add(exerciseController.text);
-      //       currentWorkDuration.add(int.parse(exerciseDurationController.text));
-      //       test();
-      //       Navigator.of(context).pop();
-      //     },
-      //     style: TextButton.styleFrom(
-      //       primary: Colors.amberAccent,
-      //     ),
-      //     child: const Text('Add exercise'),
-      //   ),
-      //   TextButton(
-      //     onPressed: () {
-      //       workoutName = myController.text;
-      //       isName = false;
-      //       test();
-      //       setState(() {
-      //         isName = isName;
-      //       });
-      //       Navigator.of(context).pop();
-      //     },
-      //     child: const Text('Finish'),
-      //   ),
-      // ],
+      content: formWidget(context),
     );
   }
 
-
   Widget formWidget(BuildContext context) {
-    // Build a Form widget using the _formKey created above.
     return Form(
       key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          TextFormField(
-            controller: repeatNumberController,
-            keyboardType: TextInputType.number,
-            decoration: const InputDecoration(
-              labelText: "Circuit repeats",
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TextFormField(
+              controller: repeatNumberController,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
+                labelText: "Circuit repeats",
+              ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Enter number of times the circuit will repeat.';
+                }
+                return null;
+              },
             ),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Enter number of times the circuit will repeat.';
-              }
-              return null;
-            },
-          ),
-          TextFormField(
-            controller: exerciseDurationController,
-            keyboardType: TextInputType.number,
-            decoration: const InputDecoration(
-              labelText: "Work Duration",
+            TextFormField(
+              controller: workRestController,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
+                labelText: "Work Duration",
+              ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Enter how long each set is.';
+                }
+                return null;
+              },
             ),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Enter how long each set is.';
-              }
-              return null;
-            },
-          ),
-          TextFormField(
-            controller: exerciseController,
-            keyboardType: TextInputType.text,
-            decoration: const InputDecoration(
-              labelText: "First Exercise Name",
+            TextFormField(
+              controller: exerciseController,
+              keyboardType: TextInputType.text,
+              decoration: const InputDecoration(
+                labelText: "First Exercise Name",
+              ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Enter how long each set is.';
+                }
+                return null;
+              },
             ),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Enter how long each set is.';
-              }
-              return null;
-            },
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
-            child: Row(
-              children: [
-                ElevatedButton(
-
-                    onPressed: (){
-                  Navigator.of(context).pop();
-                },
-                  child: const Text('Cancel'),
-                  style: ElevatedButton.styleFrom(
-                          primary: Colors.red,
-                ),
-                ),
-                const Spacer(),
-                ElevatedButton(
-                  onPressed: () {
-                    // Validate returns true if the form is valid, or false otherwise.
-                    if (_formKey.currentState!.validate()) {
-                      //save the data and move on
-                    }
-                  },
-                  child: const Text('Submit'),
-
-                ),
-              ],
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              child: Row(
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('Cancel'),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.red,
+                    ),
+                  ),
+                  const Spacer(),
+                  ElevatedButton(
+                    onPressed: () {
+                      // Validate returns true if the form is valid, or false otherwise.
+                      if (_formKey.currentState!.validate()) {
+                        print('testing');
+                        currentRepeat = int.parse(repeatNumberController.text);
+                        currentWorkDuration
+                            .add(int.parse(workRestController.text));
+                        currentWorkRest.add(exerciseController.text);
+                        setState(() {});
+                        Navigator.of(context).pop();
+                      }
+                    },
+                    child: const Text('Submit'),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
-
 
   void test() {
     print(currentRepeat);
