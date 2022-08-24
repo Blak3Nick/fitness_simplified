@@ -103,9 +103,9 @@ class _CreateKettleBellWorkoutState extends State<CreateKettleBellWorkout> {
                         Navigator.pushNamed(context, '/kettlebellworkouts');
                       },
                       style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(Colors.redAccent),
+                          backgroundColor: MaterialStateProperty.all(Colors.red[300]),
                           padding: MaterialStateProperty.all(const EdgeInsets.all(10)),
-                          textStyle: MaterialStateProperty.all(const TextStyle(fontSize: 30))),
+                          textStyle: MaterialStateProperty.all(const TextStyle(fontSize: 20))),
                     ),
                     const Spacer(),
                     Row(
@@ -118,8 +118,11 @@ class _CreateKettleBellWorkoutState extends State<CreateKettleBellWorkout> {
                           ? ElevatedButton(
                           child: const Text('Complete Workout'),
                           onPressed: () {
-                            //TO DO
                             //save workout, pop up confirmation go back to workout screen
+                            if (addToGroup()) {
+                              showDialog(context: context, builder: workoutBuiltAlert);
+                              addKWorkout();
+                            }
                             Navigator.pushNamed(context, '/kettlebellworkouts');
                           },
                           style: ButtonStyle(
@@ -141,10 +144,10 @@ class _CreateKettleBellWorkoutState extends State<CreateKettleBellWorkout> {
                               child: const Text('Complete Circuit'),
                               onPressed: () {
                                 addToGroup();
-                                circuitSavedAlert(context);
+                                showDialog(context: context, builder: circuitSavedAlert);
                               },
                               style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(Colors.amberAccent),
+                                  backgroundColor: MaterialStateProperty.all(Colors.deepPurpleAccent),
                                   padding: MaterialStateProperty.all(const EdgeInsets.all(5)),
                                   textStyle: MaterialStateProperty.all(const TextStyle(fontSize: 20))),
                             ): null
@@ -182,6 +185,17 @@ class _CreateKettleBellWorkoutState extends State<CreateKettleBellWorkout> {
     return  AlertDialog(
       title: const Text("Circuit Added"),
       content: const Text("The circuit was added to the workout."),
+      actions: [
+        TextButton(onPressed: () {
+          Navigator.of(context).pop();
+        }, child: const Text('Okay'))
+      ],
+    );
+  }
+  Widget workoutBuiltAlert(BuildContext context) {
+    return  AlertDialog(
+      title: const Text("Workout Built"),
+      content: const Text("The workout was saved."),
       actions: [
         TextButton(onPressed: () {
           Navigator.of(context).pop();
@@ -332,9 +346,7 @@ class _CreateKettleBellWorkoutState extends State<CreateKettleBellWorkout> {
   }
 
   void test() {
-    print(currentRepeat);
-    print(workoutName);
-    print(isName);
+
   }
 
   void clearCircuit() {
@@ -343,19 +355,27 @@ class _CreateKettleBellWorkoutState extends State<CreateKettleBellWorkout> {
     currentRestDuration = 1;
     currentWorkRest.clear();
     numberOfExercises = 1;
+    setState(() {
+
+    });
   }
 
-  void addToGroup() {
+  bool addToGroup() {
     Group group = Group(
         repeat: currentRepeat,
         work_duration: currentWorkDuration,
         rest_duration: currentRestDuration,
         work_rest: currentWorkRest);
     groups.add(group);
+    int length = groups.length;
+    print('the list of groups is $length  long');
     clearCircuit();
+    return true;
   }
 
   void addKWorkout() {
+    String work = groups[0].work_rest[0];
+    print("This is the work/rest for first group $work \n\n");
     FirestoreService firestoreService = FirestoreService();
     Future upload() async {
       firestoreService.addNewKettlebellWorkout(groups, workoutName);
