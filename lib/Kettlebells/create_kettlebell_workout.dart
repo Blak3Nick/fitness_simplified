@@ -31,7 +31,7 @@ class _CreateKettleBellWorkoutState extends State<CreateKettleBellWorkout> {
   int currentRestDuration = 1;
   List<String> currentWorkRest = [];
   int numberOfExercises = 1;
-
+  bool groupsEmpty = true;
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
@@ -53,8 +53,29 @@ class _CreateKettleBellWorkoutState extends State<CreateKettleBellWorkout> {
           children: [
             Visibility(
               visible: isName,
-              child: const Text("Let's build the workout!",
-                  style: TextStyle(fontSize: 35)),
+              child: Expanded(
+                child: Column(
+                  children:  [
+                    const Spacer(),
+                    const Text("Let's build the workout!",
+                        style: TextStyle(fontSize: 35)),
+                    const Spacer(),
+                    ElevatedButton(
+                      child: const Text('Build Workout'),
+                      onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) => _buildWorkoutNamePopup(context));
+                      },
+                      style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(Colors.blueAccent),
+                          padding: MaterialStateProperty.all(const EdgeInsets.all(10)),
+                          textStyle: MaterialStateProperty.all(const TextStyle(fontSize: 30))),
+                    ),
+                    const Spacer(),
+                  ],
+                ),
+              ),
             ),
             Visibility(
               visible: !isName,
@@ -62,14 +83,91 @@ class _CreateKettleBellWorkoutState extends State<CreateKettleBellWorkout> {
                 flex: 1,
                 child: Column(
                   children: [
-                    const Text("Current Circuit List"),
+                    const Text("Current Circuit List",
+                    style: TextStyle(
+                        fontSize: 35,
+                        decoration: TextDecoration.underline),
+                        ),
                     ListView.builder(
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,
                         itemCount: currentWorkRest.length,
-                        itemBuilder: (BuildContext ctxt, int index) {
+                        itemBuilder: (BuildContext context, int index) {
                           return Center(child: Text(currentWorkRest[index]));
                         }),
+                    const Spacer(),
+                    ElevatedButton(
+                      child: const Text('Cancel Workout'),
+                      onPressed: () {
+                        clearCircuit();
+                        Navigator.pushNamed(context, '/kettlebellworkouts');
+                      },
+                      style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(Colors.redAccent),
+                          padding: MaterialStateProperty.all(const EdgeInsets.all(10)),
+                          textStyle: MaterialStateProperty.all(const TextStyle(fontSize: 30))),
+                    ),
+                    const Spacer(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                       children:  [
+                        Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: (groups.isNotEmpty)
+                          ? ElevatedButton(
+                          child: const Text('Complete Workout'),
+                          onPressed: () {
+                            //TO DO
+                            //save workout, pop up confirmation go back to workout screen
+                            Navigator.pushNamed(context, '/kettlebellworkouts');
+                          },
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all(Colors.deepPurpleAccent),
+                              padding: MaterialStateProperty.all(const EdgeInsets.all(10)),
+                              textStyle: MaterialStateProperty.all(const TextStyle(fontSize: 30))),
+                        ): null
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children:  [
+                        Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: (currentWorkRest.isNotEmpty)
+                                ? ElevatedButton(
+                              child: const Text('Complete Circuit'),
+                              onPressed: () {
+                                addToGroup();
+                                circuitSavedAlert(context);
+                              },
+                              style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(Colors.amberAccent),
+                                  padding: MaterialStateProperty.all(const EdgeInsets.all(5)),
+                                  textStyle: MaterialStateProperty.all(const TextStyle(fontSize: 20))),
+                            ): null
+                        ),
+                        Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: ElevatedButton(
+                              child: const Text('Add to Circuit'),
+                              onPressed: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (isName)
+                                        ? (BuildContext context) => _buildWorkoutNamePopup(context)
+                                        : (BuildContext context) => _buildCircuitPopup(context));
+                              },
+                              style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(Colors.blueAccent),
+                                  padding: MaterialStateProperty.all(const EdgeInsets.all(5)),
+                                  textStyle: MaterialStateProperty.all(const TextStyle(fontSize: 20))),
+                            )
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
@@ -77,37 +175,22 @@ class _CreateKettleBellWorkoutState extends State<CreateKettleBellWorkout> {
           ],
         ),
       ),
-      floatingActionButton: TextButton(
-        // When the user presses the button, show an alert dialog containing
-        // the text that the user has entered into the text field.
-        onPressed: () {
-          showDialog(
-              context: context,
-              builder: (isName)
-                  ? (BuildContext context) => _buildWorkoutNamePopup(context)
-                  : (BuildContext context) => _buildCircuitPopup(context));
-        },
-        child: Row(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: (atLeastOneCircuit)
-                  ? const Text(
-                      "Finish Workout",
-                      style: TextStyle(
-                        fontSize: 25,
-                        color: Colors.red,
-                      ),
-                    )
-                  : null,
-            ),
-            const Spacer(),
-            const Text("Next", style: TextStyle(fontSize: 25)),
-          ],
-        ),
-      ),
     );
   }
+
+  Widget circuitSavedAlert(BuildContext context) {
+    return  AlertDialog(
+      title: const Text("Circuit Added"),
+      content: const Text("The circuit was added to the workout."),
+      actions: [
+        TextButton(onPressed: () {
+          Navigator.of(context).pop();
+        }, child: const Text('Okay'))
+      ],
+    );
+  }
+
+
 
   Widget _buildWorkoutNamePopup(BuildContext context) {
     return AlertDialog(
@@ -228,7 +311,7 @@ class _CreateKettleBellWorkoutState extends State<CreateKettleBellWorkout> {
                     onPressed: () {
                       // Validate returns true if the form is valid, or false otherwise.
                       if (_formKey.currentState!.validate()) {
-                        print('testing');
+                        atLeastOneCircuit = true;
                         currentRepeat = int.parse(repeatNumberController.text);
                         currentWorkDuration
                             .add(int.parse(workRestController.text));
