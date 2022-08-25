@@ -81,12 +81,9 @@ class FirestoreService {
     var ref = _db.collection('KettleBellWorkouts').doc(id);
     var data = <String, dynamic>{};
     List myGroups = [];
-    print(groups.length);
     for (int i = 0; i < groups.length; i++) {
       Group group = groups[i] as Group;
-      for (var element in group.work_rest) {
-        print("This is the element $element  \n\n");
-      }
+
       final nestedData = {
         'repeat': group.repeat,
         "rest_duration": group.rest_duration,

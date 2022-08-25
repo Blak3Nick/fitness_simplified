@@ -55,7 +55,7 @@ class _CreateKettleBellWorkoutState extends State<CreateKettleBellWorkout> {
               visible: isName,
               child: Expanded(
                 child: Column(
-                  children:  [
+                  children: [
                     const Spacer(),
                     const Text("Let's build the workout!",
                         style: TextStyle(fontSize: 35)),
@@ -63,14 +63,18 @@ class _CreateKettleBellWorkoutState extends State<CreateKettleBellWorkout> {
                     ElevatedButton(
                       child: const Text('Build Workout'),
                       onPressed: () {
-                            showDialog(
-                                context: context,
-                                builder: (BuildContext context) => _buildWorkoutNamePopup(context));
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) =>
+                                _buildWorkoutNamePopup(context));
                       },
                       style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(Colors.blueAccent),
-                          padding: MaterialStateProperty.all(const EdgeInsets.all(10)),
-                          textStyle: MaterialStateProperty.all(const TextStyle(fontSize: 30))),
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.blueAccent),
+                          padding: MaterialStateProperty.all(
+                              const EdgeInsets.all(10)),
+                          textStyle: MaterialStateProperty.all(
+                              const TextStyle(fontSize: 30))),
                     ),
                     const Spacer(),
                   ],
@@ -83,11 +87,11 @@ class _CreateKettleBellWorkoutState extends State<CreateKettleBellWorkout> {
                 flex: 1,
                 child: Column(
                   children: [
-                    const Text("Current Circuit List",
-                    style: TextStyle(
-                        fontSize: 35,
-                        decoration: TextDecoration.underline),
-                        ),
+                    const Text(
+                      "Current Circuit List",
+                      style: TextStyle(
+                          fontSize: 35, decoration: TextDecoration.underline),
+                    ),
                     ListView.builder(
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,
@@ -103,55 +107,72 @@ class _CreateKettleBellWorkoutState extends State<CreateKettleBellWorkout> {
                         Navigator.pushNamed(context, '/kettlebellworkouts');
                       },
                       style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(Colors.red[300]),
-                          padding: MaterialStateProperty.all(const EdgeInsets.all(10)),
-                          textStyle: MaterialStateProperty.all(const TextStyle(fontSize: 20))),
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.red[300]),
+                          padding: MaterialStateProperty.all(
+                              const EdgeInsets.all(10)),
+                          textStyle: MaterialStateProperty.all(
+                              const TextStyle(fontSize: 20))),
                     ),
                     const Spacer(),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
-                       children:  [
+                      children: [
                         Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: (groups.isNotEmpty)
-                          ? ElevatedButton(
-                          child: const Text('Complete Workout'),
-                          onPressed: () {
-                            //save workout, pop up confirmation go back to workout screen
-                            if (addToGroup()) {
-                              showDialog(context: context, builder: workoutBuiltAlert);
-                              addKWorkout();
-                            }
-                            Navigator.pushNamed(context, '/kettlebellworkouts');
-                          },
-                          style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(Colors.deepPurpleAccent),
-                              padding: MaterialStateProperty.all(const EdgeInsets.all(10)),
-                              textStyle: MaterialStateProperty.all(const TextStyle(fontSize: 30))),
-                        ): null
-                        ),
+                            padding: const EdgeInsets.all(10),
+                            child: (groups.isNotEmpty &&
+                                    currentWorkRest.isEmpty)
+                                ? ElevatedButton(
+                                    child: const Text('Complete Workout'),
+                                    onPressed: () {
+                                      //save workout, pop up confirmation go back to workout screen
+
+                                      showDialog(
+                                          context: context,
+                                          builder: workoutBuiltAlert);
+                                      addKWorkout();
+
+                                      Navigator.pushNamed(
+                                          context, '/kettlebellworkouts');
+                                    },
+                                    style: ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStateProperty.all(
+                                                Colors.deepPurpleAccent),
+                                        padding: MaterialStateProperty.all(
+                                            const EdgeInsets.all(10)),
+                                        textStyle: MaterialStateProperty.all(
+                                            const TextStyle(fontSize: 30))),
+                                  )
+                                : null),
                       ],
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
-                      children:  [
+                      children: [
                         Padding(
                             padding: const EdgeInsets.all(10),
                             child: (currentWorkRest.isNotEmpty)
                                 ? ElevatedButton(
-                              child: const Text('Complete Circuit'),
-                              onPressed: () {
-                                addToGroup();
-                                showDialog(context: context, builder: circuitSavedAlert);
-                              },
-                              style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(Colors.deepPurpleAccent),
-                                  padding: MaterialStateProperty.all(const EdgeInsets.all(5)),
-                                  textStyle: MaterialStateProperty.all(const TextStyle(fontSize: 20))),
-                            ): null
-                        ),
+                                    child: const Text('Complete Circuit'),
+                                    onPressed: () {
+                                      addToGroup();
+                                      showDialog(
+                                          context: context,
+                                          builder: circuitSavedAlert);
+                                    },
+                                    style: ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStateProperty.all(
+                                                Colors.deepPurpleAccent),
+                                        padding: MaterialStateProperty.all(
+                                            const EdgeInsets.all(5)),
+                                        textStyle: MaterialStateProperty.all(
+                                            const TextStyle(fontSize: 20))),
+                                  )
+                                : null),
                         Padding(
                             padding: const EdgeInsets.all(10),
                             child: ElevatedButton(
@@ -160,15 +181,19 @@ class _CreateKettleBellWorkoutState extends State<CreateKettleBellWorkout> {
                                 showDialog(
                                     context: context,
                                     builder: (isName)
-                                        ? (BuildContext context) => _buildWorkoutNamePopup(context)
-                                        : (BuildContext context) => _buildCircuitPopup(context));
+                                        ? (BuildContext context) =>
+                                            _buildWorkoutNamePopup(context)
+                                        : (BuildContext context) =>
+                                            _buildCircuitPopup(context));
                               },
                               style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(Colors.blueAccent),
-                                  padding: MaterialStateProperty.all(const EdgeInsets.all(5)),
-                                  textStyle: MaterialStateProperty.all(const TextStyle(fontSize: 20))),
-                            )
-                        ),
+                                  backgroundColor: MaterialStateProperty.all(
+                                      Colors.blueAccent),
+                                  padding: MaterialStateProperty.all(
+                                      const EdgeInsets.all(5)),
+                                  textStyle: MaterialStateProperty.all(
+                                      const TextStyle(fontSize: 20))),
+                            )),
                       ],
                     ),
                   ],
@@ -182,29 +207,32 @@ class _CreateKettleBellWorkoutState extends State<CreateKettleBellWorkout> {
   }
 
   Widget circuitSavedAlert(BuildContext context) {
-    return  AlertDialog(
+    return AlertDialog(
       title: const Text("Circuit Added"),
       content: const Text("The circuit was added to the workout."),
       actions: [
-        TextButton(onPressed: () {
-          Navigator.of(context).pop();
-        }, child: const Text('Okay'))
+        TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text('Okay'))
       ],
     );
   }
+
   Widget workoutBuiltAlert(BuildContext context) {
-    return  AlertDialog(
+    return AlertDialog(
       title: const Text("Workout Built"),
       content: const Text("The workout was saved."),
       actions: [
-        TextButton(onPressed: () {
-          Navigator.of(context).pop();
-        }, child: const Text('Okay'))
+        TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text('Okay'))
       ],
     );
   }
-
-
 
   Widget _buildWorkoutNamePopup(BuildContext context) {
     return AlertDialog(
@@ -345,9 +373,7 @@ class _CreateKettleBellWorkoutState extends State<CreateKettleBellWorkout> {
     );
   }
 
-  void test() {
-
-  }
+  void test() {}
 
   void clearCircuit() {
     currentRepeat = 1;
@@ -355,27 +381,24 @@ class _CreateKettleBellWorkoutState extends State<CreateKettleBellWorkout> {
     currentRestDuration = 1;
     currentWorkRest.clear();
     numberOfExercises = 1;
-    setState(() {
 
-    });
+    setState(() {});
   }
 
   bool addToGroup() {
+    print(groups.length);
     Group group = Group(
         repeat: currentRepeat,
-        work_duration: currentWorkDuration,
+        work_duration: currentWorkDuration.toList(),
         rest_duration: currentRestDuration,
-        work_rest: currentWorkRest);
+        work_rest: currentWorkRest.toList());
     groups.add(group);
-    int length = groups.length;
-    print('the list of groups is $length  long');
+    print(groups.length);
     clearCircuit();
     return true;
   }
 
   void addKWorkout() {
-    String work = groups[0].work_rest[0];
-    print("This is the work/rest for first group $work \n\n");
     FirestoreService firestoreService = FirestoreService();
     Future upload() async {
       firestoreService.addNewKettlebellWorkout(groups, workoutName);
