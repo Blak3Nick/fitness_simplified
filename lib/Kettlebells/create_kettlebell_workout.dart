@@ -115,6 +115,18 @@ class _CreateKettleBellWorkoutState extends State<CreateKettleBellWorkout> {
                           textStyle: MaterialStateProperty.all(
                               const TextStyle(fontSize: 20))),
                     ),
+                    const Text(
+                      "Current Circuit List",
+                      style: TextStyle(
+                          fontSize: 35, decoration: TextDecoration.underline),
+                    ),
+                    ListView.builder(
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemCount: currentWorkRest.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Center(child: Text(groups[index].work_rest.toString()));
+                        }),
                     const Spacer(),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
