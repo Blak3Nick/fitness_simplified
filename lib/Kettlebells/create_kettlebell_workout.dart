@@ -27,6 +27,7 @@ class _CreateKettleBellWorkoutState extends State<CreateKettleBellWorkout> {
   int circuitNumber = 1;
   List<Group> groups = [];
   int currentRepeat = 1;
+  bool currentCircuitEmpty = true;
   List<int> currentWorkDuration = [];
   int currentRestDuration = 1;
   List<String> currentWorkRest = [];
@@ -176,7 +177,8 @@ class _CreateKettleBellWorkoutState extends State<CreateKettleBellWorkout> {
                         Padding(
                             padding: const EdgeInsets.all(10),
                             child: ElevatedButton(
-                              child: const Text('Add to Circuit'),
+                              child: (currentCircuitEmpty) ?
+                              const Text("New Circuit"): const Text('Add to Circuit'),
                               onPressed: () {
                                 showDialog(
                                     context: context,
@@ -284,7 +286,7 @@ class _CreateKettleBellWorkoutState extends State<CreateKettleBellWorkout> {
 
   Widget _buildCircuitPopup(BuildContext context) {
     return AlertDialog(
-      title: const Text('How many times will this circuit be repeated?'),
+      title: const Text('Fill out the circuit information'),
       content: formWidget(context),
     );
   }
@@ -299,8 +301,9 @@ class _CreateKettleBellWorkoutState extends State<CreateKettleBellWorkout> {
             TextFormField(
               controller: repeatNumberController,
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: "Circuit repeats",
+              enabled: (currentCircuitEmpty) ? true: false,
+              decoration: InputDecoration(
+                labelText: (currentCircuitEmpty) ? "Circuit repeats": "Read only for reference",
               ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -326,7 +329,7 @@ class _CreateKettleBellWorkoutState extends State<CreateKettleBellWorkout> {
               controller: exerciseController,
               keyboardType: TextInputType.text,
               decoration: const InputDecoration(
-                labelText: "First Exercise Name",
+                labelText: "Exercise Name",
               ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -354,6 +357,7 @@ class _CreateKettleBellWorkoutState extends State<CreateKettleBellWorkout> {
                       // Validate returns true if the form is valid, or false otherwise.
                       if (_formKey.currentState!.validate()) {
                         atLeastOneCircuit = true;
+                        currentCircuitEmpty = false;
                         currentRepeat = int.parse(repeatNumberController.text);
                         currentWorkDuration
                             .add(int.parse(workRestController.text));
@@ -381,19 +385,17 @@ class _CreateKettleBellWorkoutState extends State<CreateKettleBellWorkout> {
     currentRestDuration = 1;
     currentWorkRest.clear();
     numberOfExercises = 1;
-
+    currentCircuitEmpty = true;
     setState(() {});
   }
 
   bool addToGroup() {
-    print(groups.length);
     Group group = Group(
         repeat: currentRepeat,
         work_duration: currentWorkDuration.toList(),
         rest_duration: currentRestDuration,
         work_rest: currentWorkRest.toList());
     groups.add(group);
-    print(groups.length);
     clearCircuit();
     return true;
   }

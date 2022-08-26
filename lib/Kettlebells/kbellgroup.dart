@@ -32,18 +32,25 @@ class KbellGroup extends StatelessWidget {
             children: [
               Flexible(
                 flex: 3,
-                child: SizedBox(
-                  child: Image.asset(
-                    'assets/kbell.png',
-                    fit: BoxFit.contain,
-                  ),
-                ),
+                child: Column(
+                   children: [
+                   Text(kettleBellWorkout.id,
+                    style: const TextStyle(
+                      height: 1.5,
+                      fontWeight: FontWeight.bold,)),
+                  //  SizedBox(
+                  //   child: Image.asset(
+                  //     'assets/kbell.png',
+                  //     fit: BoxFit.scaleDown,
+                  //   ),
+                  // ),
+                ]),
               ),
               Flexible(
                 child: Padding(
                   padding: const EdgeInsets.only(left: 10, right: 10),
                   child: Text(
-                    kettleBellWorkout.id,
+                    "Total time: " + kettleBellWorkout.Total,
                     style: const TextStyle(
                       height: 1.5,
                       fontWeight: FontWeight.bold,

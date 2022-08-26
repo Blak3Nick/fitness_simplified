@@ -81,8 +81,14 @@ class FirestoreService {
     var ref = _db.collection('KettleBellWorkouts').doc(id);
     var data = <String, dynamic>{};
     List myGroups = [];
+    int totalDuration = 0;
     for (int i = 0; i < groups.length; i++) {
       Group group = groups[i] as Group;
+      int tempDuration = 0;
+      for(int duration in group.work_duration){
+        tempDuration += duration;
+      }
+      totalDuration += tempDuration * group.repeat;
 
       final nestedData = {
         'repeat': group.repeat,
@@ -92,6 +98,8 @@ class FirestoreService {
       };
       myGroups.add(nestedData);
     }
+    totalDuration = (totalDuration / 60).ceil();
+    data['Total'] = "~" + totalDuration.toString() + " min";
     data['id'] = id;
     data['groups'] = myGroups;
 

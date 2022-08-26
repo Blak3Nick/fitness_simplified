@@ -33,12 +33,14 @@ KettleBellWorkout _$KettleBellWorkoutFromJson(Map<String, dynamic> json) =>
               .toList() ??
           const [],
       id: json['id'] as String? ?? '',
+      Total: json['Total'] as String? ?? '',
     );
 
 Map<String, dynamic> _$KettleBellWorkoutToJson(KettleBellWorkout instance) =>
     <String, dynamic>{
       'groups': instance.groups,
       'id': instance.id,
+      'Total': instance.Total,
     };
 
 Option _$OptionFromJson(Map<String, dynamic> json) => Option(

@@ -38,7 +38,8 @@ class Group {
 class KettleBellWorkout {
   List<Group> groups;
   String id;
-  KettleBellWorkout({this.groups = const [], this.id = ''});
+  String Total;
+  KettleBellWorkout({this.groups = const [], this.id = '', this.Total = ''});
   factory KettleBellWorkout.fromJson(Map<String, dynamic> json) =>
       _$KettleBellWorkoutFromJson(json);
   Map<String, dynamic> toJson() => _$KettleBellWorkoutToJson(this);
