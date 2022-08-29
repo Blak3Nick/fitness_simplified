@@ -247,7 +247,7 @@ class _BeginKettlebellWorkoutState extends State<BeginKettlebellWorkout> {
       // times.add(restTime);
       for (int j = 0; j < repeat; j++) {
         allExercises.addAll(workRest);
-        for (int k = 0; k < timeFactor; k++) {
+        for (int k = 0; k < workRest.length; k++) {
           allTimes.addAll(times);
         }
       }

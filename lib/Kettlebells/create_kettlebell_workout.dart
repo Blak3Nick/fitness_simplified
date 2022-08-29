@@ -89,9 +89,9 @@ class _CreateKettleBellWorkoutState extends State<CreateKettleBellWorkout> {
                 child: Column(
                   children: [
                     const Text(
-                      "Current Circuit List",
+                      "Current Exercises in Circuit",
                       style: TextStyle(
-                          fontSize: 35, decoration: TextDecoration.underline),
+                          fontSize: 30, decoration: TextDecoration.underline),
                     ),
                     ListView.builder(
                         scrollDirection: Axis.vertical,
@@ -118,14 +118,15 @@ class _CreateKettleBellWorkoutState extends State<CreateKettleBellWorkout> {
                     const Text(
                       "Current Circuit List",
                       style: TextStyle(
-                          fontSize: 35, decoration: TextDecoration.underline),
+                          fontSize: 30, decoration: TextDecoration.underline),
                     ),
                     ListView.builder(
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,
-                        itemCount: currentWorkRest.length,
+                        itemCount: groups.length,
                         itemBuilder: (BuildContext context, int index) {
-                          return Center(child: Text(groups[index].work_rest.toString()));
+                          int realIndex = index + 1;
+                          return Center(child: Text("Circuit #$realIndex"));
                         }),
                     const Spacer(),
                     Row(
@@ -189,8 +190,9 @@ class _CreateKettleBellWorkoutState extends State<CreateKettleBellWorkout> {
                         Padding(
                             padding: const EdgeInsets.all(10),
                             child: ElevatedButton(
-                              child: (currentCircuitEmpty) ?
-                              const Text("New Circuit"): const Text('Add to Circuit'),
+                              child: (currentCircuitEmpty)
+                                  ? const Text("New Circuit")
+                                  : const Text('Add to Circuit'),
                               onPressed: () {
                                 showDialog(
                                     context: context,
@@ -313,9 +315,11 @@ class _CreateKettleBellWorkoutState extends State<CreateKettleBellWorkout> {
             TextFormField(
               controller: repeatNumberController,
               keyboardType: TextInputType.number,
-              enabled: (currentCircuitEmpty) ? true: false,
+              enabled: (currentCircuitEmpty) ? true : false,
               decoration: InputDecoration(
-                labelText: (currentCircuitEmpty) ? "Circuit repeats": "Read only for reference",
+                labelText: (currentCircuitEmpty)
+                    ? "Circuit repeats"
+                    : "Read only for reference",
               ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
