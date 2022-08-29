@@ -60,6 +60,17 @@ class FirestoreService {
     });
   }
 
+  Future<List<KettleBellWorkout>> getUserKettlebellWorkouts() async {
+    var user = AuthService().user!;
+    var ref =
+        _db.collection('users').doc(user.uid).collection('KettleBellWorkouts');
+    var snapshot = await ref.get();
+    var data = snapshot.docs.map((s) => s.data());
+    var kbell_workouts = data.map((d) => KettleBellWorkout.fromJson(d));
+    developer.log(data.toString());
+    return kbell_workouts.toList();
+  }
+
   /// Updates the current user's report document after completing quiz
   Future<void> updateUserReport(Quiz quiz) {
     var user = AuthService().user!;
@@ -85,7 +96,7 @@ class FirestoreService {
     for (int i = 0; i < groups.length; i++) {
       Group group = groups[i] as Group;
       int tempDuration = 0;
-      for(int duration in group.work_duration){
+      for (int duration in group.work_duration) {
         tempDuration += duration;
       }
       totalDuration += tempDuration * group.repeat;
