@@ -42,14 +42,14 @@ class KettleBellWorkoutsScreen extends StatelessWidget {
               ],
             ),
             drawer: KettleBellWorkoutDrawer(kbellworkouts: kettlebellworkouts),
-            body: GridView.count(
+            body:  GridView.count(
               primary: false,
               padding: const EdgeInsets.all(20.0),
               crossAxisSpacing: 10.0,
               crossAxisCount: 2,
               children: kettlebellworkouts.map<Widget>((kettlebellworkout) => KbellGroup(kettleBellWorkout: kettlebellworkout)).toList(),
-
             ),
+
             floatingActionButton: FloatingActionButton.extended(
               onPressed: () {
                 Navigator.pushNamed(context, '/createKettlebellWorkout');
@@ -67,4 +67,13 @@ class KettleBellWorkoutsScreen extends StatelessWidget {
       },
     );
   }
+
+   List<KettleBellWorkout> userWorkouts(){
+      List<KettleBellWorkout> workouts = [];
+      Future future = FirestoreService().getUserKettlebellWorkouts();
+      future.then((value) => workouts);
+      return workouts;
+  }
+
+
 }
