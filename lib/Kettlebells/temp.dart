@@ -187,14 +187,14 @@ class _FriendTextFieldsState extends State<FriendTextFields> {
   Widget build(BuildContext context) {
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
       _nameController.text =
-          _CreateKettleBellWorkoutState.friendsList[widget.index] ?? '';
+          _CreateKettleBellWorkoutState.friendsList[widget.index];
     });
 
     return TextFormField(
       controller: _nameController,
       onChanged: (v) =>
           _CreateKettleBellWorkoutState.friendsList[widget.index] = v,
-      decoration: InputDecoration(hintText: 'Enter your friend\'s name'),
+      decoration: const InputDecoration(hintText: 'Enter your friend\'s name'),
       validator: (v) {
         if (v!.trim().isEmpty) return 'Please enter something';
         return null;

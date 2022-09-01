@@ -152,7 +152,7 @@ class _BeginKettlebellWorkoutState extends State<BeginKettlebellWorkout> {
         } else if (snapshot.hasData) {
           kettleBellWorkout ??= snapshot.data!;
           if (kettleBellWorkout != null && firstPass == true) {
-            maxGroups = kettleBellWorkout?.groups.length! as int;
+            maxGroups = kettleBellWorkout?.groups.length as int;
             seconds = kettleBellWorkout?.groups[0].work_duration[0] as int;
             workRestMax = kettleBellWorkout?.groups[0].work_rest.length as int;
             setExerciseData();
