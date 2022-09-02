@@ -115,3 +115,16 @@ class Report {
   factory Report.fromJson(Map<String, dynamic> json) => _$ReportFromJson(json);
   Map<String, dynamic> toJson() => _$ReportToJson(this);
 }
+
+@JsonSerializable()
+class WorkoutSet {
+  String exerciseName;
+  int weightUsed;
+  double weightFactor;
+  List repScheme;
+  int reps;
+
+  WorkoutSet({this.exerciseName = '', this.weightUsed =0, this.weightFactor = 0.0, this.repScheme = const [], this.reps = 0});
+  
+
+}

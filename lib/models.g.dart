@@ -119,3 +119,20 @@ Map<String, dynamic> _$ReportToJson(Report instance) => <String, dynamic>{
       'total': instance.total,
       'topics': instance.topics,
     };
+
+WorkoutSet _$WorkoutSetFromJson(Map<String, dynamic> json) => WorkoutSet(
+      exerciseName: json['exerciseName'] as String? ?? '',
+      weightUsed: json['weightUsed'] as int? ?? 0,
+      weightFactor: (json['weightFactor'] as num?)?.toDouble() ?? 0.0,
+      repScheme: json['repScheme'] as List<dynamic>? ?? const [],
+      reps: json['reps'] as int? ?? 0,
+    );
+
+Map<String, dynamic> _$WorkoutSetToJson(WorkoutSet instance) =>
+    <String, dynamic>{
+      'exerciseName': instance.exerciseName,
+      'weightUsed': instance.weightUsed,
+      'weightFactor': instance.weightFactor,
+      'repScheme': instance.repScheme,
+      'reps': instance.reps,
+    };
