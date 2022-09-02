@@ -86,7 +86,7 @@ class FirestoreService {
     return ref.set(data, SetOptions(merge: true));
   }
 
-  /// Updates the current user's report document after completing quiz
+  /// Adds a workout to the main group
   Future<void> addNewKettlebellWorkout(List groups, String id) {
     //var user = AuthService().user!;
     var ref = _db.collection('KettleBellWorkouts').doc(id);
@@ -116,4 +116,37 @@ class FirestoreService {
 
     return ref.set(data, SetOptions(merge: true));
   }
+
+  Future<void> addNewUserKettlebellWorkout(List groups, String id) {
+    var user = AuthService().user!;
+    var ref = _db.collection('users').doc(user.uid).collection('KettleBellWorkouts').doc(id);
+    var data = <String, dynamic>{};
+    List myGroups = [];
+    int totalDuration = 0;
+    for (int i = 0; i < groups.length; i++) {
+      Group group = groups[i] as Group;
+      int tempDuration = 0;
+      for (int duration in group.work_duration) {
+        tempDuration += duration;
+      }
+      totalDuration += tempDuration * group.repeat;
+
+      final nestedData = {
+        'repeat': group.repeat,
+        "rest_duration": group.rest_duration,
+        "work_duration": group.work_duration,
+        'work_rest': group.work_rest,
+      };
+      myGroups.add(nestedData);
+    }
+    totalDuration = (totalDuration / 60).ceil();
+    data['Total'] = "~" + totalDuration.toString() + " min";
+    data['id'] = id;
+    data['groups'] = myGroups;
+
+    return ref.set(data, SetOptions(merge: true));
+  }
+
+
+
 }

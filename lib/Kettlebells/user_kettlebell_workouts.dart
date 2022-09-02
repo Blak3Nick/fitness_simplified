@@ -7,16 +7,15 @@ import '../services/firestore.dart';
 import '../shared/bottom_nav.dart';
 import '../shared/error.dart';
 import '../shared/loading.dart';
-import 'kettlebell_drawer.dart';
 
 
-class KettleBellWorkoutsScreen extends StatelessWidget {
-  const KettleBellWorkoutsScreen({Key? key}) : super(key: key);
+class UserKettleBellWorkoutsScreen extends StatelessWidget {
+  const UserKettleBellWorkoutsScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<KettleBellWorkout>>(
-      future: FirestoreService().getKettlebellWorkouts(),
+      future: FirestoreService().getUserKettlebellWorkouts(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const LoadingScreen();
@@ -41,7 +40,6 @@ class KettleBellWorkoutsScreen extends StatelessWidget {
                 )
               ],
             ),
-            drawer: KettleBellWorkoutDrawer(kbellworkouts: kettlebellworkouts),
             body:  GridView.count(
               primary: false,
               padding: const EdgeInsets.all(20.0),
@@ -52,9 +50,10 @@ class KettleBellWorkoutsScreen extends StatelessWidget {
 
             floatingActionButton: FloatingActionButton.extended(
               onPressed: () {
-                Navigator.pushNamed(context, '/userkettlebellworkouts');
+                Navigator.pushNamed(context, '/createKettlebellWorkout');
               },
-              label: const Text('Custom User Workouts'),
+              label: const Text('Add New Workout'),
+              icon: const Icon(Icons.thumb_up),
               backgroundColor: Colors.pink,
             ),
             bottomNavigationBar: const BottomNavBar(),

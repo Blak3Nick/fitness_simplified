@@ -419,7 +419,7 @@ class _CreateKettleBellWorkoutState extends State<CreateKettleBellWorkout> {
   void addKWorkout() {
     FirestoreService firestoreService = FirestoreService();
     Future upload() async {
-      firestoreService.addNewKettlebellWorkout(groups, workoutName);
+      firestoreService.addNewUserKettlebellWorkout(groups, workoutName);
     }
 
     upload();
