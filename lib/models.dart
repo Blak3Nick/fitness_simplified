@@ -124,7 +124,13 @@ class WorkoutSet {
   List repScheme;
   int reps;
 
-  WorkoutSet({this.exerciseName = '', this.weightUsed =0, this.weightFactor = 0.0, this.repScheme = const [], this.reps = 0});
-  
-
+  WorkoutSet(
+      {this.exerciseName = '',
+      this.weightUsed = 0,
+      this.weightFactor = 0.0,
+      this.repScheme = const [],
+      this.reps = 0});
+  factory WorkoutSet.fromJson(Map<String, dynamic> json) =>
+      _$WorkoutSetFromJson(json);
+  Map<String, dynamic> toJson() => _$WorkoutSetToJson(this);
 }

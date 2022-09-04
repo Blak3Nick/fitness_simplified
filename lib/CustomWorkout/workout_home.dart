@@ -8,7 +8,6 @@ import '../shared/bottom_nav.dart';
 import '../shared/error.dart';
 import '../shared/loading.dart';
 
-
 class WorkoutHomeScreen extends StatelessWidget {
   const WorkoutHomeScreen({Key? key}) : super(key: key);
 
@@ -29,7 +28,7 @@ class WorkoutHomeScreen extends StatelessWidget {
           return Scaffold(
             appBar: AppBar(
               backgroundColor: Colors.deepPurple,
-              title: const Text('Kettlebell Workouts'),
+              title: const Text('Workout Home'),
               actions: [
                 IconButton(
                   icon: Icon(
@@ -40,14 +39,16 @@ class WorkoutHomeScreen extends StatelessWidget {
                 )
               ],
             ),
-            body:  GridView.count(
+            body: GridView.count(
               primary: false,
               padding: const EdgeInsets.all(20.0),
               crossAxisSpacing: 10.0,
               crossAxisCount: 2,
-              children: kettlebellworkouts.map<Widget>((kettlebellworkout) => KbellGroup(kettleBellWorkout: kettlebellworkout)).toList(),
+              children: kettlebellworkouts
+                  .map<Widget>((kettlebellworkout) =>
+                      KbellGroup(kettleBellWorkout: kettlebellworkout))
+                  .toList(),
             ),
-
             floatingActionButton: FloatingActionButton.extended(
               onPressed: () {
                 Navigator.pushNamed(context, '/userkettlebellworkouts');
@@ -56,7 +57,6 @@ class WorkoutHomeScreen extends StatelessWidget {
               backgroundColor: Colors.pink,
             ),
             bottomNavigationBar: const BottomNavBar(),
-
           );
         } else {
           return const Text('No workouts found. Contact Support');
@@ -64,5 +64,4 @@ class WorkoutHomeScreen extends StatelessWidget {
       },
     );
   }
-
 }
